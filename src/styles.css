@@ -2,15 +2,22 @@ body {
     margin: 0;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 0;
     background-color: #000000;
     color: #ffffff;
     font-family: Arial, sans-serif;
 }
 
 main {
-    padding: 0;
+    width: min(90vw, 1100px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 #radar-canvas {
@@ -21,4 +28,56 @@ main {
     border: 1px solid #0066ff;
     box-sizing: border-box;
     display: block;
+}
+
+#surface-editor {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#surface-editor table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #101010;
+    color: #f0f0f0;
+    font-size: 0.9rem;
+}
+
+#surface-editor caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+#surface-editor th,
+#surface-editor td {
+    border: 1px solid #2b2b2b;
+    padding: 0.35rem 0.5rem;
+    text-align: center;
+}
+
+#surface-editor td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+
+#surface-editor input[type="number"] {
+    width: 100%;
+    background-color: #000000;
+    border: 1px solid #3d3d3d;
+    border-radius: 4px;
+    color: inherit;
+    padding: 0.25rem 0.35rem;
+    text-align: right;
+}
+
+#surface-editor input[type="number"]:focus {
+    outline: 2px solid #0066ff;
+    outline-offset: 1px;
+}
+
+#surface-editor .ymin-value {
+    display: inline-block;
+    min-width: 3.5rem;
 }

@@ -43,6 +43,125 @@ opticalSurfaces.push({  // Eine EndLeinwand fuer den austretenden Strahl, im Pri
     hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
 });
 
+const surfaceEditorContainer = document.getElementById('surface-editor');
+const surfaceEditorFields = [
+    { key: 'xFixed', label: 'xFixed (mm)', step: 1 },
+    { key: 'yMax', label: 'yMax (mm)', step: 1 },
+    { key: 'yMin', label: 'yMin (mm)', editable: false },
+    { key: 'focusRadius', label: 'focusRadius (mm)', step: 1 },
+    { key: 'relPermittivity', label: 'relPermittivity', step: 0.1, min: 0.1 },
+    { key: 'hyperK', label: 'hyperK', step: 0.1 }
+];
+const yMinCellIdPrefix = 'surface-ymin-';
+
+function initSurfaceEditor() {
+    if (!surfaceEditorContainer) return;
+
+    const editableCount = Math.max(opticalSurfaces.length - 1, 0);
+    if (!editableCount) {
+        surfaceEditorContainer.textContent = 'Keine Flaechen zum Bearbeiten vorhanden.';
+        return;
+    }
+
+    const table = document.createElement('table');
+    const caption = document.createElement('caption');
+    caption.textContent = 'Optische Flaechen bearbeiten';
+    table.appendChild(caption);
+
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+
+    const nameHeader = document.createElement('th');
+    nameHeader.textContent = 'Flaeche';
+    headerRow.appendChild(nameHeader);
+
+    surfaceEditorFields.forEach(field => {
+        const th = document.createElement('th');
+        th.textContent = field.label;
+        headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+
+    for (let index = 0; index < editableCount; index += 1) {
+        const surface = opticalSurfaces[index];
+        const row = document.createElement('tr');
+
+        const nameCell = document.createElement('td');
+        nameCell.textContent = `F${index + 1}`;
+        row.appendChild(nameCell);
+
+        surfaceEditorFields.forEach(field => {
+            const cell = document.createElement('td');
+            if (field.editable === false) {
+                const span = document.createElement('span');
+                span.className = 'ymin-value';
+                span.id = `${yMinCellIdPrefix}${index}`;
+                span.textContent = surface.yMin.toString();
+                cell.appendChild(span);
+            } else {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.step = field.step ? String(field.step) : '1';
+                if (Object.prototype.hasOwnProperty.call(field, 'min')) input.min = String(field.min);
+                if (Object.prototype.hasOwnProperty.call(field, 'max')) input.max = String(field.max);
+                input.value = surface[field.key].toString();
+                input.dataset.surfaceIndex = String(index);
+                input.dataset.fieldKey = field.key;
+                input.inputMode = 'decimal';
+                input.addEventListener('change', handleSurfaceEditorInput);
+                input.addEventListener('input', handleSurfaceEditorInput);
+                cell.appendChild(input);
+            }
+            row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+    }
+
+    table.appendChild(tbody);
+    surfaceEditorContainer.replaceChildren(table);
+}
+
+function handleSurfaceEditorInput(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+
+    const fieldKey = target.dataset.fieldKey;
+    if (!fieldKey) return;
+
+    const surfaceIndex = Number(target.dataset.surfaceIndex);
+    if (!Number.isInteger(surfaceIndex) || surfaceIndex < 0 || surfaceIndex >= opticalSurfaces.length - 1) return;
+
+    const rawValueString = target.value.trim();
+    if (rawValueString === '') return;
+
+    const parsedValue = Number(rawValueString);
+    if (!Number.isFinite(parsedValue)) return;
+
+    const surface = opticalSurfaces[surfaceIndex];
+    if (!surface) return;
+
+    if (fieldKey === 'yMax') {
+        const sanitizedValue = Math.abs(parsedValue);
+        surface.yMax = sanitizedValue;
+        surface.yMin = -sanitizedValue;
+        target.value = sanitizedValue.toString();
+        updateYMinCell(surfaceIndex, surface.yMin);
+    } else {
+        surface[fieldKey] = parsedValue;
+    }
+}
+
+function updateYMinCell(surfaceIndex, value) {
+    if (!surfaceEditorContainer) return;
+    const span = surfaceEditorContainer.querySelector(`#${yMinCellIdPrefix}${surfaceIndex}`);
+    if (span) span.textContent = value.toString();
+}
+
 const canvas = document.getElementById('radar-canvas');
 if (!(canvas instanceof HTMLCanvasElement))   throw new Error('Keine Canvas!');
 const context = canvas.getContext('2d');
@@ -335,6 +454,7 @@ function drawInfoLabel() {
 }
 
 window.addEventListener('resize', drawCanvas);
+initSurfaceEditor();
 let globalWaveShift=0; // Globale Wellenverschiebung
 function animate() {
     drawCanvas();
