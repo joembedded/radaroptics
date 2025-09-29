@@ -5,7 +5,7 @@ Dieses Script ist ersteimal nur ein Fragment. Siehe Docu.
 */
 
 // Umrechnungsfaktor: Pixel pro mm (anpassbar)
-const pxPerMm = 6; // z.B. 4 Pixel pro mm
+let pxPerMm = 6; // z.B. 4 Pixel pro mm
 const rasterMm = 5; // Rasterabstand in mm
 
 const waveLengthMm = 5; // Vakuum-Wellenlänge in mm (z.B. 5mm = 60GHz   )
@@ -53,13 +53,41 @@ const surfaceEditorFields = [
     { key: 'hyperK', label: 'hyperK', step: 0.1 }
 ];
 const yMinCellIdPrefix = 'surface-ymin-';
+const pxPerMmInputId = 'px-per-mm-input';
 
 function initSurfaceEditor() {
     if (!surfaceEditorContainer) return;
 
+    const fragment = document.createDocumentFragment();
+
+    const controlsRow = document.createElement('div');
+    controlsRow.className = 'surface-editor-controls';
+
+    const label = document.createElement('label');
+    label.setAttribute('for', pxPerMmInputId);
+    label.textContent = 'px pro mm';
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.id = pxPerMmInputId;
+    input.step = '0.5';
+    input.min = '0.1';
+    input.value = pxPerMm.toString();
+    input.inputMode = 'decimal';
+    input.addEventListener('change', handlePxPerMmInput);
+    input.addEventListener('input', handlePxPerMmInput);
+
+    controlsRow.appendChild(label);
+    controlsRow.appendChild(input);
+    fragment.appendChild(controlsRow);
+
     const editableCount = Math.max(opticalSurfaces.length - 1, 0);
     if (!editableCount) {
-        surfaceEditorContainer.textContent = 'Keine Flaechen zum Bearbeiten vorhanden.';
+        const info = document.createElement('p');
+        info.className = 'surface-editor-empty';
+        info.textContent = 'Keine Flaechen zum Bearbeiten vorhanden.';
+        fragment.appendChild(info);
+        surfaceEditorContainer.replaceChildren(fragment);
         return;
     }
 
@@ -103,18 +131,18 @@ function initSurfaceEditor() {
                 span.textContent = surface.yMin.toString();
                 cell.appendChild(span);
             } else {
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.step = field.step ? String(field.step) : '1';
-                if (Object.prototype.hasOwnProperty.call(field, 'min')) input.min = String(field.min);
-                if (Object.prototype.hasOwnProperty.call(field, 'max')) input.max = String(field.max);
-                input.value = surface[field.key].toString();
-                input.dataset.surfaceIndex = String(index);
-                input.dataset.fieldKey = field.key;
-                input.inputMode = 'decimal';
-                input.addEventListener('change', handleSurfaceEditorInput);
-                input.addEventListener('input', handleSurfaceEditorInput);
-                cell.appendChild(input);
+                const inputField = document.createElement('input');
+                inputField.type = 'number';
+                inputField.step = field.step ? String(field.step) : '1';
+                if (Object.prototype.hasOwnProperty.call(field, 'min')) inputField.min = String(field.min);
+                if (Object.prototype.hasOwnProperty.call(field, 'max')) inputField.max = String(field.max);
+                inputField.value = surface[field.key].toString();
+                inputField.dataset.surfaceIndex = String(index);
+                inputField.dataset.fieldKey = field.key;
+                inputField.inputMode = 'decimal';
+                inputField.addEventListener('change', handleSurfaceEditorInput);
+                inputField.addEventListener('input', handleSurfaceEditorInput);
+                cell.appendChild(inputField);
             }
             row.appendChild(cell);
         });
@@ -123,7 +151,25 @@ function initSurfaceEditor() {
     }
 
     table.appendChild(tbody);
-    surfaceEditorContainer.replaceChildren(table);
+    fragment.appendChild(table);
+    surfaceEditorContainer.replaceChildren(fragment);
+}
+
+function handlePxPerMmInput(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+
+    const valueString = target.value.trim();
+    if (valueString === '') return;
+
+    const parsedValue = Number(valueString);
+    if (!Number.isFinite(parsedValue)) return;
+
+    const sanitizedValue = Math.max(0.1, parsedValue);
+    pxPerMm = sanitizedValue;
+    target.value = sanitizedValue.toString();
+    nullPxX = rasterMm * pxPerMm;
+    drawCanvas();
 }
 
 function handleSurfaceEditorInput(event) {
@@ -169,6 +215,7 @@ if (!context)  throw new Error('Kein 2D Context!');
 
 //-----------Funktionen---------------
 function drawCanvas() {
+    nullPxX = rasterMm * pxPerMm;
     const bRect = canvas.getBoundingClientRect();
     const bWidth = Math.floor(bRect.width);
     const bHeight = Math.floor(bRect.height);
@@ -463,4 +510,5 @@ function animate() {
     if(globalWaveShift>=waveLengthMm) globalWaveShift-=waveLengthMm; // Korrektur
 }
 animate();
+
 
