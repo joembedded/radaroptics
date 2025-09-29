@@ -1,6 +1,8 @@
 # Radaroptics Simulation 
 (C) JoEmbedded.de
 
+🚀 **[Live Demo](https://joembedded.github.io/radaroptics/)** - Direkt im Browser testen!
+
 ![Screenshot der Simulation](img/screen.png)
 
 ## Ueberblick
@@ -15,6 +17,12 @@ Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ brei
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschliesslich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Fuer den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis haeufig aus.
 
 ## Schnellstart
+
+### Option 1: Live Demo (Empfohlen)
+- Einfach die **[Live Demo](https://joembedded.github.io/radaroptics/)** im Browser öffnen
+- Sofort einsatzbereit, kein Download nötig
+
+### Option 2: Lokale Installation
 1. Repository klonen oder herunterladen.
 2. `index.html` in einem aktuellen Browser oeffnen (lokal, kein Build-Schritt noetig).
 3. In `src/main.js` die gewuenschten Parameter anpassen.
