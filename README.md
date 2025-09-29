@@ -1,10 +1,12 @@
-# Radaroptics Simulation (C) JoEmbedded.de
+# Radaroptics Simulation 
+(C) JoEmbedded.de
+
 
 ## Ueberblick
 - Visualisiert Brechung und Fokussierung von mm-Wellen-Radarstrahlen in 2D.
 - Simuliert die Wirkung dielektrischer Linsen mit frei definierbaren Geometrien.
 - Unterstuetzt iterative Linsenkonstruktion durch schnelle Anpassung der Parameter in `src/main.js`.
-- Liefert reproduzierbare Ergebnisse, solange alle Eingaben dokumentiert werden.
+- Liefert realWorld Ergebnisse! Für echte Linsen.
 
 ## Was ist Radaroptik?
 Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ breite Abstrahlkeule mit 60 bis 90 Grad. Fuer Punkt- oder Distanzmessungen ist eine fokussierte Keule jedoch deutlich praeziser. In Bereichen um 60 GHz betraegt die Wellenlaenge nur noch ca. 5 mm - gross genug, um dielektrische Linsen wie klassische Optiken zu verwenden und dennoch deutlich einfacher zu fertigen als optische Praezisionslinsen.
@@ -17,7 +19,7 @@ Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. 
 3. In `src/main.js` die gewuenschten Parameter anpassen.
 4. Seite im Browser neu laden, um Aenderungen zu sehen.
 
-> Tipp: Fuer eine komfortable Entwicklungsumgebung empfiehlt sich ein lokaler HTTP-Server (z.B. `npx serve`), ist aber nicht zwingend notwendig.
+![Screenshot der Simulation](img/screen.png)
 
 ## Aufbau der Simulation
 - **Emitter (rot):** Punktquelle am Ursprung, deren Abstrahlwinkel ueber `startAngleDeg`, `endAngleDeg` und `angleStep` gesteuert wird.
