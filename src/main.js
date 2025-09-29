@@ -65,7 +65,7 @@ function initSurfaceEditor() {
 
     const label = document.createElement('label');
     label.setAttribute('for', pxPerMmInputId);
-    label.textContent = 'px pro mm';
+    label.textContent = 'Pixel per mm:';
 
     const input = document.createElement('input');
     input.type = 'number';
@@ -93,7 +93,7 @@ function initSurfaceEditor() {
 
     const table = document.createElement('table');
     const caption = document.createElement('caption');
-    caption.textContent = 'Optische Flaechen bearbeiten';
+    caption.textContent = 'Optische Flaechen bearbeiten:';
     table.appendChild(caption);
 
     const thead = document.createElement('thead');
@@ -285,7 +285,7 @@ function calcSag(y, focusRadius, hyperK=0) {
     if (focusRadius === 0) return 0; // War Planflache
     const hy2 = y*y;
     // sagitta() Normalform
-    let dx = hy2/(focusRadius+Math.sqrt(focusRadius*focusRadius-(1+hyperK)*hy2));
+    let dx = hy2/(Math.abs(focusRadius)+Math.sqrt(focusRadius*focusRadius-(1+hyperK)*hy2));
 
     if (isNaN(dx)) dx = Math.abs(focusRadius); // y ist außerhalb des Kreises
     if (focusRadius > 0) return dx;
