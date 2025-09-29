@@ -87,8 +87,8 @@ main {
 
 #surface-editor input[type="number"] {
     width: 5ch;
-    min-width: 3rem;
-    max-width: 6ch;
+    min-width: 4rem;
+    max-width: 8ch;
     background-color: #000000;
     border: 1px solid #3d3d3d;
     border-radius: 4px;
@@ -98,7 +98,7 @@ main {
 }
 
 #surface-editor input[type="number"]:focus {
-    outline: 2px solid #0066ff;
+    outline: 1px solid #0066ff;
     outline-offset: 1px;
 }
 

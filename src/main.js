@@ -408,11 +408,11 @@ function drawRays() {
             nRel =1/n1lightspeedRel;
             drawWaveMm(rayVector, hitInfo.vectLenMm, nRel,frameWaveShiftMm);
             const anzWellen = hitInfo.vectLenMm / (waveLengthMm*nRel);
-            console.log("LenMm:",hitInfo.vectLenMm.toFixed(4),"=>Anz.",anzWellen.toFixed(4),"nRel:",nRel);
+            //console.log("LenMm:",hitInfo.vectLenMm.toFixed(4),"=>Anz.",anzWellen.toFixed(4),"nRel:",nRel);
             const resMm = anzWellen - Math.floor(anzWellen); // Nachkommastellen
             frameWaveShiftMm-=resMm*(waveLengthMm) ; // Rest fuer die naechste Welle
             if(frameWaveShiftMm<0) frameWaveShiftMm+=waveLengthMm; // Korrektur
-            console.log("Rest:", frameWaveShiftMm.toFixed(4));
+            //console.log("Rest:", frameWaveShiftMm.toFixed(4));
 
             // Neuer Strahlvektor
             let winkelDiff = einfallsWinkel-brechungsWinkel;
