@@ -1,45 +1,54 @@
+/* 
+Radaroptics Simulation - (C)JoEmbedded.de 
+Dieses Script ist ersteimal nur ein Fragment. Siehe Docu. 
+Ändern der Parameter und Optiken nur im Code.
+*/
+
 // Umrechnungsfaktor: Pixel pro mm (anpassbar)
-const pxPerMm = 4; // z.B. 4 Pixel pro mm
+const pxPerMm = 6; // z.B. 4 Pixel pro mm
 const rasterMm = 5; // Rasterabstand in mm
 
-// Ursprung um 1 Raster verschieben
-let nullPxX = rasterMm * pxPerMm;
-let NullPxY = 0; // Dynamisch gesetzt in drawCanvas
+const waveLengthMm = 5; // Vakuum-Wellenlänge in mm (z.B. 5mm = 60GHz   )
 
-// Das sind die möglichen optischen Flächen
+// Ursprung um 1 X-Raster und Y-mittig verschieben
+let nullPxX = rasterMm * pxPerMm;
+let nullPxY = 0; // Dynamisch gesetzt in drawCanvas
+
+// Das sind die möglichen optischen Flächen. Mindestens sind noetig
 const opticalSurfaces = [];
 opticalSurfaces.push({
-    xFixed: 40,     // Fixpunkt an X=20mm
-    yMin: -30,   // von Y= -,, bis
-    yMax: 30,   // Y= ..
-    focusRadius: 80,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
-    relPermittivity: 3 // relative Permittivität, danach Medium
-});
+    xFixed: 25,     // Fixpunkt an X=20mm
+    yMin: -23,   // von Y= -,, bis
+    yMax: 23,   // Y= ..
+    focusRadius: 20,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+    relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
+    hyperK: -2.7 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+}); 
+
 opticalSurfaces.push({
-    xFixed: 60,
-    yMin: -30,
-    yMax: 30,
+    xFixed: 35,     // Fixpunkt an X=20mm
+    yMin: -23,   // von Y= -,, bis
+    yMax: 23,   // Y= ..
+    focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+    relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
+    hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+});
+
+opticalSurfaces.push({  // Eine EndLeinwand fuer den austretenden Strahl, im Prinzip nur ein Platzhalter
+    xFixed: 10000,
+    yMin: -100000,
+    yMax: 100000,
     focusRadius: 0,
-    relPermittivity: 1 // Danach Luft
+    relPermittivity: 1, // Danach Luft
+    hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
 });
 
 const canvas = document.getElementById('radar-canvas');
-if (!(canvas instanceof HTMLCanvasElement)) {
-    // Fehlerfall: canvas ist kein HTMLCanvasElement
-    throw new Error('Element mit ID "radar-canvas" ist kein Canvas!');
-}
+if (!(canvas instanceof HTMLCanvasElement))   throw new Error('Keine Canvas!');
 const context = canvas.getContext('2d');
-if (!context) {
-    throw new Error('2D context not available');
-}
-// Berechnet den x-Versatz für einen gegebenen y-Wert und optionaler Brennweite
-function calcDx(y, focusRadius) {
-    if (focusRadius === 0) return 0;
-    let dx = Math.abs(focusRadius) - Math.sqrt(focusRadius * focusRadius - y * y);
-    if (isNaN(dx)) dx = Math.abs(focusRadius); // y ist außerhalb des Kreises
-    if (focusRadius > 0) return dx;
-    return -dx;
-}
+if (!context)  throw new Error('Kein 2D Context!');
+
+//-----------Funktionen---------------
 function drawCanvas() {
     const bRect = canvas.getBoundingClientRect();
     const bWidth = Math.floor(bRect.width);
@@ -48,11 +57,216 @@ function drawCanvas() {
         canvas.width = bWidth;
         canvas.height = bHeight;
     }
+    // Standards - Aenderung an Canvas resetten context
+    context.font = '10px Arial';
+    context.fillStyle = 'white';
+    context.textBaseline = 'top';
+
     // Y-Achse invertieren, damit -y unten ist und 
-    NullPxY = canvas.height / 2; // Mittelpunkt des Canvas als Ursprung
-    context.setTransform(1, 0, 0, -1, 0, canvas.height);
-    canvasBackground();
+    nullPxY = canvas.height / 2; // Mittelpunkt des Canvas als Ursprung
+    drawBackground();
     drawSurfaces();
+    drawInfoLabel(); // Label mit Abmessungen und Skalierung
+    drawRays(); // Strahlen zeichnen
+
+}
+// Zeichnet einen Punkt in mm-Koordinaten - z.B. fuer Wellenmaxima. Liefert true wenn im Feld, fasle wenn draussen
+function drawDotMm(px, py, color = 'white', psize = 0.5) {
+    const canx = nullPxX + px * pxPerMm;
+    const cany = nullPxY - py * pxPerMm;
+    if (canx < 0 || canx >= canvas.width || cany < 0 || cany >= canvas.height) return false;
+    context.save();
+    context.fillStyle = color;
+    context.beginPath();
+    context.arc(canx, cany, psize * pxPerMm, 0, 2 * Math.PI);
+    context.fill();
+    context.restore();
+    return true;
+}
+// Zeichnet eine Linie in mm-Koordinaten, kein return
+function drawLineMm(px1, py1, px2, py2, color = 'white', lineWidth = 0.1) {
+    context.save();
+    context.strokeStyle = color;
+    context.lineWidth = lineWidth * pxPerMm;
+    context.beginPath();
+    context.moveTo(px1 * pxPerMm + nullPxX, nullPxY - py1 * pxPerMm);
+    context.lineTo(px2 * pxPerMm + nullPxX, nullPxY - py2 * pxPerMm);
+    context.stroke();
+    context.restore();
+}
+
+// Zeichnet die Wellenfront
+function  drawWaveMm(rayVector, lineLenMm, relWaveLen, modulMm){
+    const stepMm = waveLengthMm*relWaveLen; // Schrittweite in mm
+    let px = rayVector.currentXMm + modulMm*rayVector.dirX*relWaveLen; // Startpunkt mit Wellenmodulation
+    let py = rayVector.currentYMm + modulMm*rayVector.dirY*relWaveLen; 
+    drawDotMm(px, py, (relWaveLen==1)?'gold':'lime', 0.2);
+    lineLenMm-=modulMm*relWaveLen; // Erster Punkt schon gezeichnet
+    while(lineLenMm>=stepMm)    {
+        px+=rayVector.dirX * stepMm;
+        py+=rayVector.dirY * stepMm;
+        lineLenMm-=stepMm;
+        drawDotMm(px, py, (relWaveLen==1)?'gold':'lime', 0.2);
+    }
+}
+
+
+
+// Berechnet die sagitta (Versatz in x-Richtung) für einen gegebenen y-Wert und 
+// optionaler Brennweite (focusRadius != 0) oder Planfläche (focusRadius=0)
+// hyperK beschreibt die Aberation: hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+function calcSag(y, focusRadius, hyperK=0) {
+    if (focusRadius === 0) return 0; // War Planflache
+    const hy2 = y*y;
+    // sagitta() Normalform
+    let dx = hy2/(focusRadius+Math.sqrt(focusRadius*focusRadius-(1+hyperK)*hy2));
+
+    if (isNaN(dx)) dx = Math.abs(focusRadius); // y ist außerhalb des Kreises
+    if (focusRadius > 0) return dx;
+    return -dx;
+}
+
+// Iteriert Hitpunkt zur aktuellen Flaeche
+function findHitToSurface(rayVector, surface) {
+    let surfXHit = surface.xFixed;
+    for (let i = 0; i < 100; i++) {
+        const vectLenMm = (surfXHit - rayVector.currentXMm) / rayVector.dirX;
+        const targX = rayVector.currentXMm + rayVector.dirX * vectLenMm;
+        const targY = rayVector.currentYMm + rayVector.dirY * vectLenMm;
+        const surfX = surface.xFixed + calcSag(targY, surface.focusRadius, surface.hyperK);
+        const deltaX = surfX - targX;
+        surfXHit += deltaX;
+        if (Math.abs(deltaX) < 1e-6) {
+            //console.log("Y:", targY.toFixed(4), "DX:", deltaX, "vectLenMm:", vectLenMm.toFixed(4), "Iter:", i);
+            if (targY > surface.yMax || targY < surface.yMin) {
+                console.log("Ausserhalb!");
+                drawDotMm(targX, targY, 'red');
+                return null; // Treffer ausserhalb der Flaeche
+            }
+            // Optional Trefferpunkt
+            //drawDotMm(targX, targY, 'yellow'); // Trefferpunkt
+            const tStepMm = 0.1; // mm
+            const tLowMm = calcSag(targY + tStepMm, surface.focusRadius, surface.hyperK);
+            const tHighMm = calcSag(targY - tStepMm, surface.focusRadius, surface.hyperK);
+            const tSteilheit = (tHighMm - tLowMm) / (2 * tStepMm);
+            // console.log("TStep:", tStepMm, "Low:", tLowMm, "High:", tHighMm, "Steilheit:", tSteilheit);
+
+            const orthogonalenLaenge = 5; // Laenge des Orthogonalen Strichs
+            const orthogoX0 = targX + orthogonalenLaenge;
+            const orthogoY0 = targY + orthogonalenLaenge * tSteilheit;
+            const orthogoX1 = targX - orthogonalenLaenge;
+            const orthogoY1 = targY - orthogonalenLaenge * tSteilheit;
+            // Option Orthogonale an der Auftreffstelle zeichnen:
+            //drawLineMm(orthogoX0, orthogoY0, orthogoX1, orthogoY1, 'deepskyblue', 0.2);
+
+            // vectLenMm ist Multi/Distanz in mm bis zum Treffer
+            return { vectLenMm: vectLenMm, hitX: targX, hitY: targY, orthoX0: orthogoX0, orthoX1: orthogoX1, orthoY0: orthogoY0, orthoY1: orthogoY1 }
+        }
+    }
+    console.log("Konvergenzfehler: surface:", surface); // Kann am Rand passieren
+    return null; // Konvergenzfehler
+}
+// Winkelfunktion zwischen zwei Vektoren in Radiant
+function calculateWinkel(winkelA, winkelB) {
+    // Vektor A
+    const ax = winkelA.x1 - winkelA.x0;
+    const ay = winkelA.y1 - winkelA.y0;
+    // Vektor B
+    const bx = winkelB.x1 - winkelB.x0;
+    const by = winkelB.y1 - winkelB.y0;
+    // Skalarprodukt
+    const dot = ax * bx + ay * by;
+    // Beträge
+    const magA = Math.sqrt(ax * ax + ay * ay);
+    const magB = Math.sqrt(bx * bx + by * by);
+    if (magA === 0 || magB === 0) return 0; // Ungültige Vektoren
+    // Winkel in Radiant
+    let angle = Math.acos(dot / (magA * magB));
+    return angle; // Radiant
+}
+
+function drawRays() {
+    // Zeichnet die Strahlen
+    const startAngleDeg = -30;
+    const endAngleDeg = 30;
+    const angleStep = 2
+
+    context.save();
+    for (let angleDeg = startAngleDeg; angleDeg <= endAngleDeg; angleDeg += angleStep) {
+        const angleRad = angleDeg * Math.PI / 180;
+        const rayVector = {
+            currentXMm: 0, // Start bei (0,0) in mm 
+            currentYMm: 0,
+            dirX: Math.cos(angleRad),  // und in Richtung des Winkels
+            dirY: Math.sin(angleRad),
+            currentMediumPermitivity: 1, // Start im Medium Luft 
+        };
+        let frameWaveShiftMm=globalWaveShift; // Wellenverschiebung (0 bis Wellenlange Mm )
+
+        // Berechne den nächsten Schnittpunkt mit einer optischen Fläche
+        for (const surface of opticalSurfaces) {
+            const hitInfo = findHitToSurface(rayVector, surface);
+            if (!hitInfo) break; // Kein Treffer, weiter mit dem nächsten Strahl
+            //console.log("DistMm:", hitInfo);
+            const winkelA = {
+                x0: rayVector.currentXMm,
+                y0: rayVector.currentYMm,
+                x1: hitInfo.hitX,
+                y1: hitInfo.hitY
+            };
+            const winkelB = { // Senkrechte zur Oberfläche
+                x0: hitInfo.orthoX1,
+                y0: hitInfo.orthoY1,
+                x1: hitInfo.orthoX0,
+                y1: hitInfo.orthoY0
+            };
+            const einfallsWinkel = calculateWinkel(winkelA, winkelB);
+            // console.log("Einfallswinkel (deg):", (einfallsWinkel * 180 / Math.PI).toFixed(3));
+            // Brechungswinkel nach Snellius
+            const n1lightspeedRel = Math.sqrt(rayVector.currentMediumPermitivity); // Brechungsindex Medium und
+            const n2lightspeedRel = Math.sqrt(surface.relPermittivity); // Brechungsindex neues Medium
+            const sinB = n1lightspeedRel * Math.sin(einfallsWinkel) / n2lightspeedRel;
+            if (sinB > 1) {
+                console.log("Totalreflexion!");
+                drawLineMm(rayVector.currentXMm, rayVector.currentYMm, hitInfo.hitX, hitInfo.hitY, 'red', 0.1);
+                break; // Totalreflexion, Strahl endet hier
+            }
+            const brechungsWinkel = Math.asin(sinB);
+            // console.log("Brechungswinkel (deg):", (brechungsWinkel * 180 / Math.PI).toFixed(2));
+
+            // Eingangsstrahl zeichnen
+            if(rayVector.currentMediumPermitivity<=1) drawLineMm(rayVector.currentXMm, rayVector.currentYMm, hitInfo.hitX, hitInfo.hitY, 'orange', 0.1);
+            else drawLineMm(rayVector.currentXMm, rayVector.currentYMm, hitInfo.hitX, hitInfo.hitY, 'green', 0.3);
+
+            // Welle zeichnen und Rest mm berechnen
+            nRel =1/n1lightspeedRel;
+            drawWaveMm(rayVector, hitInfo.vectLenMm, nRel,frameWaveShiftMm);
+            const anzWellen = hitInfo.vectLenMm / (waveLengthMm*nRel);
+            console.log("LenMm:",hitInfo.vectLenMm.toFixed(4),"=>Anz.",anzWellen.toFixed(4),"nRel:",nRel);
+            const resMm = anzWellen - Math.floor(anzWellen); // Nachkommastellen
+            frameWaveShiftMm-=resMm*(waveLengthMm) ; // Rest fuer die naechste Welle
+            if(frameWaveShiftMm<0) frameWaveShiftMm+=waveLengthMm; // Korrektur
+            console.log("Rest:", frameWaveShiftMm.toFixed(4));
+
+            // Neuer Strahlvektor
+            let winkelDiff = einfallsWinkel-brechungsWinkel;
+            if(winkelA.y1>winkelA.y0) winkelDiff=-winkelDiff; // Unten trifft er an, also negieren
+            // console.log("WinkelDiff (deg):", (winkelDiff * 180 / Math.PI).toFixed(2));
+            const sinAlpha = Math.sin(winkelDiff);
+            const cosAlpha = Math.cos(winkelDiff);
+            const newDirX = rayVector.dirX * cosAlpha - rayVector.dirY * sinAlpha;
+            const newDirY = rayVector.dirX * sinAlpha + rayVector.dirY * cosAlpha;
+
+            // Update des Strahlvektors
+            rayVector.currentXMm = hitInfo.hitX;
+            rayVector.currentYMm = hitInfo.hitY;
+            rayVector.dirX = newDirX;
+            rayVector.dirY = newDirY;
+            rayVector.currentMediumPermitivity = surface.relPermittivity; // Update des Mediums
+            // Weiter mit dem nächsten Segment des Strahls oder "Leinwand" am Ende
+        }
+    }
+    context.restore();
 }
 
 function drawSurfaces() {
@@ -64,15 +278,15 @@ function drawSurfaces() {
         const step = 1 / rasterMm; // Abstand der Punkte in Pixeln
 
         context.save();
-        context.strokeStyle = (surface.relPermittivity > 1) ? '#00ff00' : '#f700ffff'; // grün
+        context.strokeStyle = (surface.relPermittivity > 1) ? 'green' : 'pink'; // grün
         context.lineWidth = 1;
 
         context.beginPath();
         for (let y = yu; y <= yo; y += step) {
-            const x = x0 + calcDx(y, surface.focusRadius);
+            const x = x0 + calcSag(y, surface.focusRadius, surface.hyperK);
 
-            const px = (x * pxPerMm) + nullPxX;
-            const py = (y * pxPerMm) + NullPxY;
+            const px = nullPxX + (x * pxPerMm);
+            const py = nullPxY - (y * pxPerMm);
             if (y === yu) {
                 context.moveTo(px, py);
             } else {
@@ -80,79 +294,53 @@ function drawSurfaces() {
             }
         }
         context.stroke();
-
         context.restore();
     }
     );
 }
 
-function canvasBackground() {
+function drawBackground() {
 
     // Hintergrundfarbe
     context.save();
-    context.fillStyle = '#101020';
+    context.fillStyle = 'black';
     context.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Kariertes Linienraster zeichnen
-    const gridSpacing = rasterMm * pxPerMm; // 5 mm Abstand
-    context.save();
-    context.strokeStyle = '#22232a'; // dunkles Grau
-    context.lineWidth = 1;
-
-    // X Vertikale Linien
-    for (let x = -nullPxX; x <= canvas.width; x += gridSpacing) {
-        context.beginPath();
-        context.moveTo(x + nullPxX, 0);
-        context.lineTo(x + nullPxX, canvas.height);
-        context.stroke();
-    }
-    // Y Horizontale Linien
-    for (let y = -NullPxY; y <= canvas.height; y += gridSpacing) {
-        context.beginPath();
-        context.moveTo(0, y + NullPxY);
-        context.lineTo(canvas.width, y + NullPxY);
-        context.stroke();
-    }
-
     context.restore();
+
+    // Raaster X Vertikale Linien
+    for (let x = 0; x <= canvas.width / pxPerMm; x += rasterMm) {
+        drawLineMm(x, -canvas.height / pxPerMm, x, canvas.height / pxPerMm, 'slategray', 0.1);
+    }
+    // Raster Y Horizontale Linien
+    for (let y = 0; y <= canvas.height / pxPerMm / 2; y += rasterMm) {
+        drawLineMm(-canvas.width / pxPerMm, y, canvas.width / pxPerMm, y, 'slategray', 0.1);
+        if (!y) continue; // y=0 schon gezeichnet
+        drawLineMm(-canvas.width / pxPerMm, -y, canvas.width / pxPerMm, -y, 'slategray', 0.1);
+    }
 
     // Emitter - Roten Kreis bei (0,0) mit 2mm Durchmesser zeichnen
-    context.save();
-    context.beginPath();
-    context.arc(nullPxX, NullPxY, pxPerMm, 0, 2 * Math.PI); // Radius = 1mm = pxPerMm
-    context.fillStyle = 'red';
-    context.fill();
-    context.restore();
-
-
-    // Nur zum Test - Strahlenförmige radiale Linien zeichnen
-    if (0) {
-        context.save();
-        context.strokeStyle = '#ff8800'; // Orange für Strahlen
-        context.lineWidth = 1;
-
-        const startAngleDeg = -30;
-        const endAngleDeg = 30;
-        const angleStep = 3;
-        const originX = nullPxX;
-        const originY = NullPxY;
-        const maxRadius = Math.max(canvas.width, canvas.height);
-
-        for (let angleDeg = startAngleDeg; angleDeg <= endAngleDeg; angleDeg += angleStep) {
-            const angleRad = angleDeg * Math.PI / 180;
-            const x = originX + maxRadius * Math.cos(angleRad);
-            const y = originY + maxRadius * Math.sin(angleRad);
-            context.beginPath();
-            context.moveTo(originX, originY);
-            context.lineTo(x, y);
-            context.stroke();
-        }
-        context.restore();
-        // Strahlen Ende
-    }
-
+    drawDotMm(0, 0, 'red', 1);
 };
 
+function drawInfoLabel() {
+    context.save();
+    // Dimensionen berechnen
+    const widthMm = Math.round(canvas.width / pxPerMm);
+    const heightMm = Math.round(canvas.height / pxPerMm);
+    const label1 = `Fläche: ${widthMm}mm × ${heightMm}mm   Raster: ${rasterMm}mm`;
+    const label2 = `Wellenlänge: ${waveLengthMm}mm (= ${Math.round(300/waveLengthMm)}GHz)`;
+    context.fillText(label1, 8, 6);
+    context.fillText(label2, 8, 20);
+    context.restore();
+}
+
 window.addEventListener('resize', drawCanvas);
-drawCanvas();
+let globalWaveShift=0; // Globale Wellenverschiebung
+function animate() {
+    drawCanvas();
+    requestAnimationFrame(animate);
+    globalWaveShift+=waveLengthMm/30; // Geschwindigkeit der Wellenverschiebung
+    if(globalWaveShift>=waveLengthMm) globalWaveShift-=waveLengthMm; // Korrektur
+}
+animate();
 
