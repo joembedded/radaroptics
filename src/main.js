@@ -55,6 +55,70 @@ const surfaceEditorFields = [
 const yMinCellIdPrefix = 'surface-ymin-';
 const pxPerMmInputId = 'px-per-mm-input';
 
+
+//-----------Funktionen Datenzugriff---------------
+function handleSurfaceNameClick(surface, name) {
+    let details = `
+    Flaeche: ${name}:
+    ------------------------------
+    xFixed: ${surface.xFixed} mm
+    yMin: ${surface.yMin} mm
+    yMax: ${surface.yMax} mm
+    focusRadius: ${surface.focusRadius} mm
+    relPermittivity: ${surface.relPermittivity}
+    hyperK: ${surface.hyperK}
+
+    Sagitta-Kontroll-Werte:
+    ------------------------------   
+`;
+    for (let i = 0; i < 10; i++) {
+        const y = surface.yMin + (surface.yMax - surface.yMin) * i / 9;
+        const sag = calcSag(y, surface.focusRadius, surface.hyperK);
+        details += `    y: ${y.toFixed(2)} mm => sag: ${sag.toFixed(4)} mm\n`;
+    }
+
+    // Popup-Fenster erstellen
+    const popup = document.createElement('div');
+    popup.style.position = 'fixed';
+    popup.style.left = '50%';
+    popup.style.top = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.background = '#222';
+    popup.style.color = '#fff';
+    popup.style.padding = '20px';
+    popup.style.borderRadius = '8px';
+    popup.style.boxShadow = '0 4px 16px rgba(0,0,0,0.5)';
+    popup.style.zIndex = '10000';
+    popup.style.maxWidth = '90vw';
+    popup.style.maxHeight = '80vh';
+    popup.style.overflowY = 'auto';
+    popup.style.fontFamily = 'monospace';
+
+    // Close-Button
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Schließen';
+    closeBtn.style.float = 'right';
+    closeBtn.style.marginLeft = '10px';
+    closeBtn.style.background = '#444';
+    closeBtn.style.color = '#fff';
+    closeBtn.style.border = 'none';
+    closeBtn.style.padding = '4px 12px';
+    closeBtn.style.borderRadius = '4px';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(popup);
+    });
+
+    // Inhalt
+    const pre = document.createElement('pre');
+    pre.textContent = details;
+
+    popup.appendChild(closeBtn);
+    popup.appendChild(pre);
+
+    document.body.appendChild(popup);
+}
+
 function initSurfaceEditor() {
     if (!surfaceEditorContainer) return;
 
@@ -70,7 +134,7 @@ function initSurfaceEditor() {
     const input = document.createElement('input');
     input.type = 'number';
     input.id = pxPerMmInputId;
-    input.step = '0.5';
+    input.step = '0.1';
     input.min = '0.1';
     input.value = pxPerMm.toString();
     input.inputMode = 'decimal';
@@ -119,7 +183,11 @@ function initSurfaceEditor() {
         const row = document.createElement('tr');
 
         const nameCell = document.createElement('td');
-        nameCell.textContent = `F${index + 1}`;
+        nameCell.innerHTML = `<u>F${index + 1}</u> &#128279;`; // Unicode Link-Symbol
+        nameCell.style.cursor = 'pointer';
+        nameCell.addEventListener('click', () => {
+            handleSurfaceNameClick(surface, `F${index + 1}`);
+        });
         row.appendChild(nameCell);
 
         surfaceEditorFields.forEach(field => {
@@ -133,7 +201,9 @@ function initSurfaceEditor() {
             } else {
                 const inputField = document.createElement('input');
                 inputField.type = 'number';
-                inputField.step = field.step ? String(field.step) : '1';
+                inputField.pattern = '-?[0-9]*';
+                inputField.inputMode    = 'decimal';
+                inputField.step = '0.1';
                 if (Object.prototype.hasOwnProperty.call(field, 'min')) inputField.min = String(field.min);
                 if (Object.prototype.hasOwnProperty.call(field, 'max')) inputField.max = String(field.max);
                 inputField.value = surface[field.key].toString();
@@ -213,7 +283,7 @@ if (!(canvas instanceof HTMLCanvasElement))   throw new Error('Keine Canvas!');
 const context = canvas.getContext('2d');
 if (!context)  throw new Error('Kein 2D Context!');
 
-//-----------Funktionen---------------
+//-----------Funktionen JoEmbedded---------------
 function drawCanvas() {
     nullPxX = rasterMm * pxPerMm;
     const bRect = canvas.getBoundingClientRect();
