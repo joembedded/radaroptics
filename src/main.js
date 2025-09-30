@@ -57,6 +57,7 @@ const pxPerMmInputId = 'px-per-mm-input';
 
 
 //-----------Funktionen Datenzugriff---------------
+let popup = null;
 function handleSurfaceNameClick(surface, name) {
     let details = `
     Flaeche: ${name}:
@@ -78,7 +79,10 @@ function handleSurfaceNameClick(surface, name) {
     }
 
     // Popup-Fenster erstellen
-    const popup = document.createElement('div');
+    if (popup !== null) {
+        document.body.removeChild(popup);
+    }
+    popup = document.createElement('div');
     popup.style.position = 'fixed';
     popup.style.left = '50%';
     popup.style.top = '50%';
@@ -93,6 +97,7 @@ function handleSurfaceNameClick(surface, name) {
     popup.style.maxHeight = '80vh';
     popup.style.overflowY = 'auto';
     popup.style.fontFamily = 'monospace';
+    popup.style.border = '1.5px solid #0a225d'; // Dünner dunkelblauer Rahmen
 
     // Close-Button
     const closeBtn = document.createElement('button');
@@ -107,6 +112,7 @@ function handleSurfaceNameClick(surface, name) {
     closeBtn.style.cursor = 'pointer';
     closeBtn.addEventListener('click', () => {
         document.body.removeChild(popup);
+        popup = null;
     });
 
     // Inhalt
