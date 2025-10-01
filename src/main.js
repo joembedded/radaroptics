@@ -37,16 +37,16 @@ opticalSurfaces.push({
 // Variante B- Fresnel Linse - Raender zuerst!
 opticalSurfaces.push({
     xFixed: 25.8,     // Fixpunkt an X=20mm
-    yMin: -23,   // von Y= -,, bis
-    yMax: -10,   // Y= ..
+    yMin: -23.0,   // von Y= -,, bis
+    yMax: -10.0,   // Y= ..
     focusRadius: 19.2,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
     relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
     hyperK: -2.9 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
 }); 
 opticalSurfaces.push({
     xFixed: 25.8,     // Fixpunkt an X=20mm
-    yMin: 10,   // von Y= -,, bis
-    yMax: 23,   // Y= ..
+    yMin: 10.0,   // von Y= -,, bis
+    yMax: 23.0,   // Y= ..
     focusRadius: 19.2,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
     relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
     hyperK: -2.9 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
@@ -124,7 +124,6 @@ function renderAngleControls(container) {
         const input = document.createElement('input');
         input.type = 'number';
         input.id = angleInputIds[field.key];
-        input.step = field.step;
         input.step = field.step;
 
         if (field.min !== undefined) input.min = field.min;
@@ -226,7 +225,7 @@ initSurfaceEditor = function() {
             const inputField = document.createElement('input');
             inputField.type = 'number';
             inputField.pattern = '-?[0-9]*';
-            inputField.inputMode = 'decimal';
+           inputField.inputMode = 'decimal';
             inputField.step = field.step ? String(field.step) : '1';
             if (Object.prototype.hasOwnProperty.call(field, 'min')) inputField.min = String(field.min);
             if (Object.prototype.hasOwnProperty.call(field, 'max')) inputField.max = String(field.max);
@@ -256,8 +255,8 @@ let nullPxY = 0; // Dynamisch gesetzt in drawCanvas
 const surfaceEditorContainer = document.getElementById('surface-editor');
 const surfaceEditorFields = [
     { key: 'xFixed', label: 'xFixed (mm)', step: 0.1 },
-    { key: 'yMax', label: 'yMax (mm)', step: 0.1 },
     { key: 'yMin', label: 'yMin (mm)', step: 0.1 }, // jetzt editierbar
+    { key: 'yMax', label: 'yMax (mm)', step: 0.1 },
     { key: 'focusRadius', label: 'focusRadius (mm)', step: 0.1 },
     { key: 'relPermittivity', label: 'relPermittivity', step: 0.1, min: 0.1 },
     { key: 'hyperK', label: 'hyperK', step: 0.1 }
@@ -411,11 +410,13 @@ function initSurfaceEditor() {
             // Alle Felder jetzt editierbar
             const inputField = document.createElement('input');
             inputField.type = 'number';
-            inputField.pattern = '-?[0-9]*';
+            //inputField.pattern = '-?[0-9]*';
             inputField.inputMode = 'decimal';
             inputField.step = field.step ? String(field.step) : '1';
-            if (Object.prototype.hasOwnProperty.call(field, 'min')) inputField.min = String(field.min);
-            if (Object.prototype.hasOwnProperty.call(field, 'max')) inputField.max = String(field.max);
+            inputField.min = -100.0;
+            inputField.max = 100.0;
+            // if (Object.prototype.hasOwnProperty.call(field, 'min')) inputField.min = String(field.min);
+            // if (Object.prototype.hasOwnProperty.call(field, 'max')) inputField.max = String(field.max);
             inputField.value = surface[field.key].toString();
             inputField.dataset.surfaceIndex = String(index);
             inputField.dataset.fieldKey = field.key;
@@ -469,17 +470,8 @@ function handleSurfaceEditorInput(event) {
     const surface = opticalSurfaces[surfaceIndex];
     if (!surface) return;
 
-    if (fieldKey === 'yMax') {
-        const sanitizedValue = Math.abs(parsedValue);
-        surface.yMax = sanitizedValue;
-        target.value = sanitizedValue.toString();
-    } else if (fieldKey === 'yMin') {
-        const sanitizedValue = -Math.abs(parsedValue);
-        surface.yMin = sanitizedValue;
-        target.value = sanitizedValue.toString();
-    } else {
-        surface[fieldKey] = parsedValue;
-    }
+       surface[fieldKey] = parsedValue;
+    
 }
 
 function updateYMinCell(surfaceIndex, value) {
