@@ -4,6 +4,7 @@
 🚀 **[Live Demo](https://joembedded.github.io/radaroptics/)** - Direkt im Browser testen!
 
 ![Screenshot der Simulation](img/screen.png)
+![Cohaerente Fresnel Linse](img/fresnel.png)
 
 ## Ueberblick
 - Visualisiert Brechung und Fokussierung von mm-Wellen-Radarstrahlen in 2D.
@@ -15,7 +16,10 @@
 Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ breite Abstrahlkeule mit 60 bis 90 Grad. Fuer Punkt- oder Distanzmessungen ist eine fokussierte Keule jedoch deutlich praeziser. In Bereichen um 60 GHz betraegt die Wellenlaenge nur noch ca. 5 mm - gross genug, um dielektrische Linsen wie klassische Optiken zu verwenden und dennoch deutlich einfacher zu fertigen als optische Linsen, z.B. mit einem einfachen 3D-Drucker.
 
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschliesslich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Fuer den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis haeufig aus.
-Die Linse aus dem Beispiel wurde als plankonvexe, hyperbolische Linse designed, deren Vorteil ist, dass sie eine plane Oberfläche besitzt.
+
+Die Linsen aus dem Beispiel sind an der Austrittsfläche plan für bessere Montagemoeglichkeiten:
+- A: plane, koherente Fresnel-Linse
+- B: plankonvexe, hyperbolisch Linse
 
 ## Schnellstart
 1. Repository klonen oder herunterladen.
@@ -49,9 +53,8 @@ Die Vorlage entstand fuer den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470
 
 <https://joembedded.de/x3/ltx_firmware/index.php?dir=./Open-SDI12-Blue-Sensors/0470_RadarDistA>
 
-## Weiterentwicklung
-- Zusaetzliche optische Flaechen (z.B. Fenster oder Radome) im `opticalSurfaces`-Array ergaenzen.
-- Totalreflexion oder Streuverluste visualisieren (siehe Kommentare in `findHitToSurface`).
-- Export der berechneten SAG()-Funktion (SAG: 'Sagitta': Bogenfunktion der Linse) im Klartext.
+## Anmerkungen
 
-Viel Erfolg beim Design eigener Radaroptiken!
+Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die technische Berechnung/Wellenzüge sollten aber exakt den physikalischen Gesetzen entsprechen. Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend!
+
+*Viel Erfolg beim Design eigener Radaroptiken!*

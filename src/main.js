@@ -10,12 +10,20 @@ const rasterMm = 5; // Rasterabstand in mm
 
 const waveLengthMm = 5; // Vakuum-Wellenlänge in mm (z.B. 5mm = 60GHz   )
 
-// Ursprung um 1 X-Raster und Y-mittig verschieben
-let nullPxX = rasterMm * pxPerMm;
-let nullPxY = 0; // Dynamisch gesetzt in drawCanvas
+let startAngleDeg = -30;
+let endAngleDeg = 30;
+let angleStep = 2
+
 
 // Das sind die möglichen optischen Flächen. Mindestens sind noetig
+// eine Eintrittsfläche und eine Austrittsfläche.
+// Die X-Distanz sollte so sortiert werden, dass zuerst getroffene Flächen
+// auch zuerst in der Liste erscheinen, auch wenn z.B für Fesnel Linse sie übereinander liegen
 const opticalSurfaces = [];
+
+// AUSWAHL: false: Klassische Linse, true: Fresnel Linse
+if(false) {
+// Variante A- Eintrittsfläche Hyperbolische Linse    
 opticalSurfaces.push({
     xFixed: 25,     // Fixpunkt an X=20mm
     yMin: -23,   // von Y= -,, bis
@@ -24,7 +32,40 @@ opticalSurfaces.push({
     relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
     hyperK: -2.7 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
 }); 
+// Ende Variante A
+}else{
+// Variante B- Fresnel Linse - Raender zuerst!
+opticalSurfaces.push({
+    xFixed: 25.8,     // Fixpunkt an X=20mm
+    yMin: -23,   // von Y= -,, bis
+    yMax: -10,   // Y= ..
+    focusRadius: 19.2,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+    relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
+    hyperK: -2.9 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+}); 
+opticalSurfaces.push({
+    xFixed: 25.8,     // Fixpunkt an X=20mm
+    yMin: 10,   // von Y= -,, bis
+    yMax: 23,   // Y= ..
+    focusRadius: 19.2,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+    relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
+    hyperK: -2.9 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+}); 
 
+opticalSurfaces.push({ // Innen
+    xFixed: 32.5,     // Fixpunkt an X=20mm
+    yMin: - 12.7/*-10*/,   // von Y= - (etwas groesser fuer Fresnel)
+    yMax: 12.7 /*10*/,   // Y= ..
+    focusRadius: 24.2,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+    relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
+    hyperK: -2.9 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+}); 
+
+
+// Ende Variante B
+}
+
+// Austrittsfläche - Fuer planaere Linse EBEN
 opticalSurfaces.push({
     xFixed: 35,     // Fixpunkt an X=20mm
     yMin: -23,   // von Y= -,, bis
@@ -34,7 +75,8 @@ opticalSurfaces.push({
     hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
 });
 
-opticalSurfaces.push({  // Eine EndLeinwand fuer den austretenden Strahl, im Prinzip nur ein Platzhalter
+// Eine EndLeinwand fuer den austretenden Strahl, im Prinzip nur ein Platzhalter
+opticalSurfaces.push({  
     xFixed: 10000,
     yMin: -100000,
     yMax: 100000,
@@ -43,12 +85,180 @@ opticalSurfaces.push({  // Eine EndLeinwand fuer den austretenden Strahl, im Pri
     hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
 });
 
+
+
+// --- Angle controls for UI ---
+const angleFields = [
+    { key: 'startAngleDeg', label: 'Start °;', step: 1 },
+    { key: 'endAngleDeg', label: 'Ende °:', step: 1 },
+    { key: 'angleStep', label: 'Schritt °:', step: 0.1, min: 0.1 }
+];
+const angleInputIds = {
+    startAngleDeg: 'start-angle-deg-input',
+    endAngleDeg: 'end-angle-deg-input',
+    angleStep: 'angle-step-input'
+};
+
+// Insert angle controls into surface editor UI
+function handleAngleInput(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    const key = target.dataset.angleKey;
+    if (!key) return;
+    let value = Number(target.value.trim());
+    if (!Number.isFinite(value)) return;
+    if (key === 'angleStep') value = Math.max(0.1, value);
+    if (key === 'startAngleDeg') startAngleDeg = value;
+    else if (key === 'endAngleDeg') endAngleDeg = value;
+    else if (key === 'angleStep') angleStep = value;
+}
+
+function renderAngleControls(container) {
+    const angleRow = document.createElement('div');
+    angleRow.className = 'angle-controls';
+    angleFields.forEach(field => {
+        const label = document.createElement('label');
+        label.setAttribute('for', angleInputIds[field.key]);
+        label.textContent = field.label;
+        label.style.marginLeft = '16px';
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.id = angleInputIds[field.key];
+        input.step = field.step;
+        input.step = field.step;
+
+        if (field.min !== undefined) input.min = field.min;
+        input.value = (field.key === 'startAngleDeg') ? startAngleDeg :
+                      (field.key === 'endAngleDeg') ? endAngleDeg : angleStep;
+        input.inputMode = 'decimal';
+        input.dataset.angleKey = field.key;
+        input.addEventListener('change', handleAngleInput);
+        input.addEventListener('input', handleAngleInput);
+        label.appendChild(input);
+        angleRow.appendChild(label);
+    });
+    container.appendChild(angleRow);
+}
+
+// Patch initSurfaceEditor to add angle controls next to pxPerMm
+const origInitSurfaceEditor = initSurfaceEditor;
+initSurfaceEditor = function() {
+    if (!surfaceEditorContainer) return;
+    const fragment = document.createDocumentFragment();
+
+    // pxPerMm controls
+    const controlsRow = document.createElement('div');
+    controlsRow.className = 'surface-editor-controls';
+
+    const label = document.createElement('label');
+    label.setAttribute('for', pxPerMmInputId);
+    label.textContent = 'Pixel per mm:';
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.id = pxPerMmInputId;
+    input.step = '0.1';
+    input.min = '0.1';
+    input.value = pxPerMm.toString();
+    input.inputMode = 'decimal';
+    input.addEventListener('change', handlePxPerMmInput);
+    input.addEventListener('input', handlePxPerMmInput);
+
+    label.appendChild(input);
+    controlsRow.appendChild(label);
+
+    // Add angle controls
+    renderAngleControls(controlsRow);
+
+    fragment.appendChild(controlsRow);
+
+    // Call original logic for the rest
+    // (copy-paste the rest of origInitSurfaceEditor, skipping pxPerMm controls)
+    // --- BEGIN original code after pxPerMm controls ---
+    const editableCount = Math.max(opticalSurfaces.length - 1, 0);
+    if (!editableCount) {
+        const info = document.createElement('p');
+        info.className = 'surface-editor-empty';
+        info.textContent = 'Keine Flaechen zum Bearbeiten vorhanden.';
+        fragment.appendChild(info);
+        surfaceEditorContainer.replaceChildren(fragment);
+        return;
+    }
+
+    const table = document.createElement('table');
+    const caption = document.createElement('caption');
+    caption.textContent = 'Optische Flaechen bearbeiten:';
+    table.appendChild(caption);
+
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+
+    const nameHeader = document.createElement('th');
+    nameHeader.textContent = 'Flaeche';
+    headerRow.appendChild(nameHeader);
+
+    surfaceEditorFields.forEach(field => {
+        const th = document.createElement('th');
+        th.textContent = field.label;
+        headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+
+    for (let index = 0; index < editableCount; index += 1) {
+        const surface = opticalSurfaces[index];
+        const row = document.createElement('tr');
+
+        const nameCell = document.createElement('td');
+        nameCell.innerHTML = `<u>F${index + 1}</u> &#128279;`; // Unicode Link-Symbol
+        nameCell.style.cursor = 'pointer';
+        nameCell.addEventListener('click', () => {
+            handleSurfaceNameClick(surface, `F${index + 1}`);
+        });
+        row.appendChild(nameCell);
+
+        surfaceEditorFields.forEach(field => {
+            const cell = document.createElement('td');
+            // Alle Felder jetzt editierbar
+            const inputField = document.createElement('input');
+            inputField.type = 'number';
+            inputField.pattern = '-?[0-9]*';
+            inputField.inputMode = 'decimal';
+            inputField.step = field.step ? String(field.step) : '1';
+            if (Object.prototype.hasOwnProperty.call(field, 'min')) inputField.min = String(field.min);
+            if (Object.prototype.hasOwnProperty.call(field, 'max')) inputField.max = String(field.max);
+            inputField.value = surface[field.key].toString();
+            inputField.dataset.surfaceIndex = String(index);
+            inputField.dataset.fieldKey = field.key;
+            inputField.addEventListener('change', handleSurfaceEditorInput);
+            inputField.addEventListener('input', handleSurfaceEditorInput);
+            cell.appendChild(inputField);
+            row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+    }
+
+    table.appendChild(tbody);
+    fragment.appendChild(table);
+    surfaceEditorContainer.replaceChildren(fragment);
+    // --- END original code ---
+};
+
+
+// Ursprung um 1 X-Raster und Y-mittig verschieben
+let nullPxX = rasterMm * pxPerMm;
+let nullPxY = 0; // Dynamisch gesetzt in drawCanvas
+
 const surfaceEditorContainer = document.getElementById('surface-editor');
 const surfaceEditorFields = [
-    { key: 'xFixed', label: 'xFixed (mm)', step: 1 },
-    { key: 'yMax', label: 'yMax (mm)', step: 1 },
-    { key: 'yMin', label: 'yMin (mm)', editable: false },
-    { key: 'focusRadius', label: 'focusRadius (mm)', step: 1 },
+    { key: 'xFixed', label: 'xFixed (mm)', step: 0.1 },
+    { key: 'yMax', label: 'yMax (mm)', step: 0.1 },
+    { key: 'yMin', label: 'yMin (mm)', step: 0.1 }, // jetzt editierbar
+    { key: 'focusRadius', label: 'focusRadius (mm)', step: 0.1 },
     { key: 'relPermittivity', label: 'relPermittivity', step: 0.1, min: 0.1 },
     { key: 'hyperK', label: 'hyperK', step: 0.1 }
 ];
@@ -72,8 +282,8 @@ function handleSurfaceNameClick(surface, name) {
     Sagitta-Kontroll-Werte:
     ------------------------------   
 `;
-    for (let i = 0; i < 10; i++) {
-        const y = surface.yMin + (surface.yMax - surface.yMin) * i / 9;
+    for (let i = 0; i < 9; i++) {
+        const y = surface.yMin + (surface.yMax - surface.yMin) * i / 8;
         const sag = calcSag(y, surface.focusRadius, surface.hyperK);
         details += `    y: ${y.toFixed(2)} mm => sag: ${sag.toFixed(4)} mm\n`;
     }
@@ -198,28 +408,20 @@ function initSurfaceEditor() {
 
         surfaceEditorFields.forEach(field => {
             const cell = document.createElement('td');
-            if (field.editable === false) {
-                const span = document.createElement('span');
-                span.className = 'ymin-value';
-                span.id = `${yMinCellIdPrefix}${index}`;
-                span.textContent = surface.yMin.toString();
-                cell.appendChild(span);
-            } else {
-                const inputField = document.createElement('input');
-                inputField.type = 'number';
-                inputField.pattern = '-?[0-9]*';
-                inputField.inputMode    = 'decimal';
-                inputField.step = '0.1';
-                if (Object.prototype.hasOwnProperty.call(field, 'min')) inputField.min = String(field.min);
-                if (Object.prototype.hasOwnProperty.call(field, 'max')) inputField.max = String(field.max);
-                inputField.value = surface[field.key].toString();
-                inputField.dataset.surfaceIndex = String(index);
-                inputField.dataset.fieldKey = field.key;
-                inputField.inputMode = 'decimal';
-                inputField.addEventListener('change', handleSurfaceEditorInput);
-                inputField.addEventListener('input', handleSurfaceEditorInput);
-                cell.appendChild(inputField);
-            }
+            // Alle Felder jetzt editierbar
+            const inputField = document.createElement('input');
+            inputField.type = 'number';
+            inputField.pattern = '-?[0-9]*';
+            inputField.inputMode = 'decimal';
+            inputField.step = field.step ? String(field.step) : '1';
+            if (Object.prototype.hasOwnProperty.call(field, 'min')) inputField.min = String(field.min);
+            if (Object.prototype.hasOwnProperty.call(field, 'max')) inputField.max = String(field.max);
+            inputField.value = surface[field.key].toString();
+            inputField.dataset.surfaceIndex = String(index);
+            inputField.dataset.fieldKey = field.key;
+            inputField.addEventListener('change', handleSurfaceEditorInput);
+            inputField.addEventListener('input', handleSurfaceEditorInput);
+            cell.appendChild(inputField);
             row.appendChild(cell);
         });
 
@@ -270,9 +472,11 @@ function handleSurfaceEditorInput(event) {
     if (fieldKey === 'yMax') {
         const sanitizedValue = Math.abs(parsedValue);
         surface.yMax = sanitizedValue;
-        surface.yMin = -sanitizedValue;
         target.value = sanitizedValue.toString();
-        updateYMinCell(surfaceIndex, surface.yMin);
+    } else if (fieldKey === 'yMin') {
+        const sanitizedValue = -Math.abs(parsedValue);
+        surface.yMin = sanitizedValue;
+        target.value = sanitizedValue.toString();
     } else {
         surface[fieldKey] = parsedValue;
     }
@@ -381,8 +585,8 @@ function findHitToSurface(rayVector, surface) {
         if (Math.abs(deltaX) < 1e-6) {
             //console.log("Y:", targY.toFixed(4), "DX:", deltaX, "vectLenMm:", vectLenMm.toFixed(4), "Iter:", i);
             if (targY > surface.yMax || targY < surface.yMin) {
-                console.log("Ausserhalb!");
-                drawDotMm(targX, targY, 'red');
+                //console.log("Ausserhalb!");
+                //drawDotMm(targX, targY, 'red');
                 return null; // Treffer ausserhalb der Flaeche
             }
             // Optional Trefferpunkt
@@ -427,11 +631,9 @@ function calculateWinkel(winkelA, winkelB) {
     return angle; // Radiant
 }
 
+
 function drawRays() {
     // Zeichnet die Strahlen
-    const startAngleDeg = -30;
-    const endAngleDeg = 30;
-    const angleStep = 2
 
     context.save();
     for (let angleDeg = startAngleDeg; angleDeg <= endAngleDeg; angleDeg += angleStep) {
@@ -448,7 +650,7 @@ function drawRays() {
         // Berechne den nächsten Schnittpunkt mit einer optischen Fläche
         for (const surface of opticalSurfaces) {
             const hitInfo = findHitToSurface(rayVector, surface);
-            if (!hitInfo) break; // Kein Treffer, weiter mit dem nächsten Strahl
+            if (!hitInfo) continue; // Vlt. mit naehster Flaeche versuchen
             //console.log("DistMm:", hitInfo);
             const winkelA = {
                 x0: rayVector.currentXMm,
@@ -468,8 +670,8 @@ function drawRays() {
             const n1lightspeedRel = Math.sqrt(rayVector.currentMediumPermitivity); // Brechungsindex Medium und
             const n2lightspeedRel = Math.sqrt(surface.relPermittivity); // Brechungsindex neues Medium
             const sinB = n1lightspeedRel * Math.sin(einfallsWinkel) / n2lightspeedRel;
-            if (sinB > 1) {
-                console.log("Totalreflexion!");
+            if (hitInfo.hitX < rayVector.currentXMm || sinB > 1) {
+                //console.log("Totalreflexion/Ecke-Artefakt");
                 drawLineMm(rayVector.currentXMm, rayVector.currentYMm, hitInfo.hitX, hitInfo.hitY, 'red', 0.1);
                 break; // Totalreflexion, Strahl endet hier
             }
