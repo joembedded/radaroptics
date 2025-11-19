@@ -19,6 +19,8 @@ Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. 
 
 In der Praxis findet man fuer die ueblicherweise eingesetzten Materialien ABS, PLA, PETG und fuer 100%-Infill (fuer 3D-FDM-Druck) Dielektrizitaetskonstanten &epsilon;<sub>r</sub> zwischen etwa 2.5 und 3.0 (siehe './Docus' ). Da die Brechnung zu Luft die Wurzel &radic;(&epsilon;<sub>r</sub>) ist, sind die Designs alle aehnlich und ueber leichte Variationen Distanz/Radius kann man leicht das Optimum finden. Sphaerische Linsen lassen sich am einfachsten drucken, daher immer ein guter Ausgangspunkt.
 
+Für ein getestetes PLA-Material wurde so experimentell ein &epsilon;<sub>r</sub> ca. 3.1 bestimmt.
+
 > [!Tip] 
 > "Echtes" 100%-Infill laesst sich nie erreichen. In kleinen Hohlraeumen kann sich immer noch Wasser sammeln. Gedruckte Linsen sind i.d.R. nicht wirklich fuer den Ausseneinsatz geeignet.
 
