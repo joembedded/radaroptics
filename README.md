@@ -4,31 +4,33 @@
 🚀 **[Live Demo](https://joembedded.github.io/radaroptics/)** - Direkt im Browser testen!
 
 ![Screenshot der Simulation](img/screen.png)
-![Cohaerente Fresnel Linse](img/fresnel.png)
+![Kohaerente Fresnel Linse](img/fresnel.png)
 
 ## Ueberblick
 - Visualisiert Brechung und Fokussierung von mm-Wellen-Radarstrahlen in 2D.
 - Simuliert die Wirkung dielektrischer Linsen mit frei definierbaren Geometrien.
 - Unterstuetzt iterative Linsenkonstruktion durch schnelle Anpassung der Parameter in `src/main.js`.
-- Liefert RealWorld Ergebnisse! Für echte Linsen!
+- Liefert RealWorld Ergebnisse! Fuer echte, 3D-druckbare Linsen!
 
 ## Was ist Radaroptik?
 Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ breite Abstrahlkeule mit 60 bis 90 Grad. Fuer Punkt- oder Distanzmessungen ist eine fokussierte Keule jedoch deutlich praeziser. In Bereichen um 60 GHz betraegt die Wellenlaenge nur noch ca. 5 mm - gross genug, um dielektrische Linsen wie klassische Optiken zu verwenden und dennoch deutlich einfacher zu fertigen als optische Linsen, z.B. mit einem einfachen 3D-Drucker.
 
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschliesslich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Fuer den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis haeufig aus.
 
-In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, PLA, PETG und für 100%-Infill (für 3D-FDM-Druck) Dieltrizitätskonstanten &epsilon;<sub>r</sub> zwischen etwa 2.5 und 3.0 (siehe './Docus' ). Da die Brechnung zu Luft die Wurzel &radic;(&epsilon;<sub>r</sub>) ist, sind die Designs alle ähnlich.
+In der Praxis findet man fuer die ueblicherweise eingesetzten Materialien ABS, PLA, PETG und fuer 100%-Infill (fuer 3D-FDM-Druck) Dielektrizitaetskonstanten &epsilon;<sub>r</sub> zwischen etwa 2.5 und 3.0 (siehe './Docus' ). Da die Brechnung zu Luft die Wurzel &radic;(&epsilon;<sub>r</sub>) ist, sind die Designs alle aehnlich und ueber leichte Variationen Distanz/Radius kann man leicht das Optimum finden. Sphaerische Linsen lassen sich am einfachsten drucken, daher immer ein guter Ausgangspunkt.
 
-> [!INFO] "Echtes" 100%-Infill lässt sich nie erreichen. In kleinen Hohlräumen kann sich immer noch Wasser sammeln. Gedruckte Linsen sind i.d.R: nicht wirklich für den Ausseneinsatz geeignet.
+> [!Tip] 
+> "Echtes" 100%-Infill laesst sich nie erreichen. In kleinen Hohlraeumen kann sich immer noch Wasser sammeln. Gedruckte Linsen sind i.d.R. nicht wirklich fuer den Ausseneinsatz geeignet.
 
-Die Linsen aus dem Beispiel sind an der Austrittsfläche plan für bessere Montagemoeglichkeiten:
-- A: plane, koherente Fresnel-Linse (Achtung: flach, aber hier werden 2 Wellenzüge überlagert, evtl. also evtl. etwas weniger exakt)
-- B: plankonvexe, hyperbolisch Linse
+Presets:
+- 0: plankonvexe, hyperbolische Linse mit planer Austrittsfläche
+- 1: plankonvexe, hyperbolisch/sphaerische Linse mit planer Eintrittsfläche
+- 2: plane, kohaerente Fresnel-Linse (Achtung: flach, aber hier werden 2 Wellenzuege ueberlagert, evtl. also evtl. etwas weniger exakt)
 
-## Schnellstart
+## Schnellstart/Modellauswahl
 1. Repository klonen oder herunterladen.
 2. `index.html` in einem aktuellen Browser oeffnen (lokal, kein Build-Schritt noetig).
-3. In `src/main.js` die gewuenschten Parameter anpassen.
+3. In `src/main.js` die gewuenschten Parameter (primaer `useModel`, `waveLengthMm`) anpassen.
 4. Seite im Browser neu laden, um Aenderungen zu sehen.
 
 ## Aufbau der Simulation
@@ -59,6 +61,6 @@ Die Vorlage entstand fuer den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470
 
 ## Anmerkungen
 
-Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die technische Berechnung/Wellenzüge sollten aber exakt den physikalischen Gesetzen entsprechen. Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend!
+Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rueckstreuung und keine Intensitaetsverteilung. Die technische Berechnung/Wellenzuege sollten aber exakt den physikalischen Gesetzen entsprechen. Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend!
 
 *Viel Erfolg beim Design eigener Radaroptiken!*

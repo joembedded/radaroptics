@@ -7,23 +7,25 @@ Dieses Script ist ersteimal nur ein Fragment. Siehe Docu.
 // Umrechnungsfaktor: Pixel pro mm (anpassbar)
 let pxPerMm = 6; // z.B. 4 Pixel pro mm
 const rasterMm = 5; // Rasterabstand in mm
-
 const waveLengthMm = 5; // Vakuum-Wellenlänge in mm (z.B. 5mm = 60GHz   )
+
+// AUSWAHL: 0-2, siehe if()
+const usedModel = 1;
 
 let startAngleDeg = -30;
 let endAngleDeg = 30;
-let angleStep = 2
-
-
+let angleStep = 2;
+let anmerkung = "Unbekanntes Modell";
 // Das sind die möglichen optischen Flächen. Mindestens sind noetig
 // eine Eintrittsfläche und eine Austrittsfläche.
 // Die X-Distanz sollte so sortiert werden, dass zuerst getroffene Flächen
 // auch zuerst in der Liste erscheinen, auch wenn z.B für Fesnel Linse sie übereinander liegen
 const opticalSurfaces = [];
 
-// AUSWAHL: false: Klassische Linse, true: Fresnel Linse
-if (true) {
-    // Variante A- Eintrittsfläche Hyperbolische Linse    
+if (usedModel === 0) {
+    anmerkung = "Grossem, plankonvexe Linse mit hyperbolischer Eintrittsfläche";
+    pxPerMm = 12;
+    // Variante 0- Eintrittsfläche Hyperbolische Linse    
     opticalSurfaces.push({
         xFixed: 25,     // Fixpunkt an X=20mm
         yMin: -23,   // von Y= -,, bis
@@ -32,10 +34,45 @@ if (true) {
         relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
         hyperK: -2.7 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
-    // Ende Variante A
-} else {
-    // Variante B- Fresnel Linse - Raender zuerst!
+    // Austrittsfläche - Fuer planaere Linse EBEN
     opticalSurfaces.push({
+        xFixed: 35,     // Fixpunkt an X=20mm
+        yMin: -23,   // von Y= -,, bis
+        yMax: 23,   // Y= ..
+        focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
+        hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+    });
+    // Ende Variante 0
+} else if (usedModel === 1) {
+    anmerkung = "Plankonvexe Linse mit hyperbolischer/sphärischer Austrittsfläche";
+    pxPerMm = 12;
+    // Variante 0- Austrittsfläche Hyperbolische Linse    
+    // Eintrittsflache - Fuer planaere Linse EBEN
+    opticalSurfaces.push({
+        xFixed: 10.5,     // Fixpunkt an X=20mm
+        yMin: -15,   // von Y= -,, bis
+        yMax: 15,   // Y= ..
+        focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        relPermittivity: 2.7, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
+        hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+    });
+    // Austrittsfläche - Hyperbolisch/Sphaerisch
+    opticalSurfaces.push({
+        xFixed: 20.5,     // Fixpunkt an X=20mm
+        yMin: -12,   // von Y= -,, bis
+        yMax: 12,   // Y= ..
+        focusRadius: -12,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        relPermittivity: 1, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
+        hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+    });
+    // Ende Variante 1
+
+} else if (usedModel === 2) {
+
+    anmerkung = "Fresnel-Linse (schick, aber evtl. nicht maximal optimal)";
+    // Variante Model 3- Fresnel Linse - Raender zuerst!
+       opticalSurfaces.push({
         xFixed: 25.8,     // Fixpunkt an X=20mm
         yMin: -23.0,   // von Y= -,, bis
         yMax: -10.0,   // Y= ..
@@ -60,20 +97,17 @@ if (true) {
         relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
         hyperK: -2.9 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
-
-
-    // Ende Variante B
+    // Austrittsfläche - Fuer planaere Linse EBEN
+    opticalSurfaces.push({
+        xFixed: 35,     // Fixpunkt an X=20mm
+        yMin: -23,   // von Y= -,, bis
+        yMax: 23,   // Y= ..
+        focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
+        hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+    });
+    // Ende Variante Model 3
 }
-
-// Austrittsfläche - Fuer planaere Linse EBEN
-opticalSurfaces.push({
-    xFixed: 35,     // Fixpunkt an X=20mm
-    yMin: -23,   // von Y= -,, bis
-    yMax: 23,   // Y= ..
-    focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
-    relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
-    hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
-});
 
 // Eine EndLeinwand fuer den austretenden Strahl, im Prinzip nur ein Platzhalter
 opticalSurfaces.push({
@@ -642,7 +676,9 @@ function drawRays() {
         let frameWaveShiftMm = globalWaveShift; // Wellenverschiebung (0 bis Wellenlange Mm )
 
         // Berechne den nächsten Schnittpunkt mit einer optischen Fläche
+        let idx = 0;
         for (const surface of opticalSurfaces) {
+            idx++; // Fuers Debug
             const hitInfo = findHitToSurface(rayVector, surface);
             if (!hitInfo) continue; // Vlt. mit naehster Flaeche versuchen
             //console.log("DistMm:", hitInfo);
@@ -663,6 +699,7 @@ function drawRays() {
             // Brechungswinkel nach Snellius
             const n1lightspeedRel = Math.sqrt(rayVector.currentMediumPermitivity); // Brechungsindex Medium und
             const n2lightspeedRel = Math.sqrt(surface.relPermittivity); // Brechungsindex neues Medium
+            const lsrel = n1lightspeedRel / n2lightspeedRel;
             const sinB = n1lightspeedRel * Math.sin(einfallsWinkel) / n2lightspeedRel;
             if (hitInfo.hitX < rayVector.currentXMm || sinB > 1) {
                 //console.log("Totalreflexion/Ecke-Artefakt");
@@ -670,8 +707,8 @@ function drawRays() {
                 break; // Totalreflexion, Strahl endet hier
             }
             const brechungsWinkel = Math.asin(sinB);
-            // console.log("Brechungswinkel (deg):", (brechungsWinkel * 180 / Math.PI).toFixed(2));
 
+            //console.log(lsrel, "Brechungswinkel (deg):", (brechungsWinkel * 180 / Math.PI).toFixed(2), idx);
             // Eingangsstrahl zeichnen
             if (rayVector.currentMediumPermitivity <= 1) drawLineMm(rayVector.currentXMm, rayVector.currentYMm, hitInfo.hitX, hitInfo.hitY, 'orange', 0.1);
             else drawLineMm(rayVector.currentXMm, rayVector.currentYMm, hitInfo.hitX, hitInfo.hitY, 'green', 0.3);
@@ -688,6 +725,7 @@ function drawRays() {
 
             // Neuer Strahlvektor
             let winkelDiff = einfallsWinkel - brechungsWinkel;
+            if (lsrel > 1) winkelDiff = -winkelDiff;
             if (winkelA.y1 > winkelA.y0) winkelDiff = -winkelDiff; // Unten trifft er an, also negieren
             // console.log("WinkelDiff (deg):", (winkelDiff * 180 / Math.PI).toFixed(2));
             const sinAlpha = Math.sin(winkelDiff);
@@ -767,8 +805,10 @@ function drawInfoLabel() {
     const heightMm = Math.round(canvas.height / pxPerMm);
     const label1 = `Fläche: ${widthMm}mm × ${heightMm}mm   Raster: ${rasterMm}mm`;
     const label2 = `Wellenlänge: ${waveLengthMm}mm (= ${Math.round(300 / waveLengthMm)}GHz)`;
+    const label3 = `Modell(JS): ${usedModel} - Anmerkung: ${anmerkung}`;
     context.fillText(label1, 8, 6);
     context.fillText(label2, 8, 20);
+    context.fillText(label3, 8, 34);
     context.restore();
 }
 
