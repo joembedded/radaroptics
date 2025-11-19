@@ -22,7 +22,7 @@ let angleStep = 2
 const opticalSurfaces = [];
 
 // AUSWAHL: false: Klassische Linse, true: Fresnel Linse
-if (false) {
+if (true) {
     // Variante A- Eintrittsfläche Hyperbolische Linse    
     opticalSurfaces.push({
         xFixed: 25,     // Fixpunkt an X=20mm

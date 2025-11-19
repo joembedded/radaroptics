@@ -17,8 +17,12 @@ Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ brei
 
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschliesslich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Fuer den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis haeufig aus.
 
+In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, PLA, PETG und für 100%-Infill (für 3D-FDM-Druck) Dieltrizitätskonstanten &epsilon;<sub>r</sub> zwischen etwa 2.5 und 3.0 (siehe './Docus' ). Da die Brechnung zu Luft die Wurzel &radic;(&epsilon;<sub>r</sub>) ist, sind die Designs alle ähnlich.
+
+[!Info] "Echtes" 100%-Infill lässt sich nie erreichen. In kleinen Hohlräumen kann sich immer noch Wasser sammeln. Gedruckte Linsen sind i.d.R: nicht wirklich für den Ausseneinsatz geeignet.
+
 Die Linsen aus dem Beispiel sind an der Austrittsfläche plan für bessere Montagemoeglichkeiten:
-- A: plane, koherente Fresnel-Linse
+- A: plane, koherente Fresnel-Linse (Achtung: flach, aber hier werden 2 Wellenzüge überlagert, evtl. also evtl. etwas weniger exakt)
 - B: plankonvexe, hyperbolisch Linse
 
 ## Schnellstart
