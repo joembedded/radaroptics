@@ -8,10 +8,30 @@
 </head>
 <body>
     <main>
-        <h4>mm-Wave RadarOptics V0.10 - (C)JoEmbedded.de</h4>
+        <h4>mm-Wave RadarOptics V0.11 - (C)JoEmbedded.de</h4>
+        <div class="model-selector">
+            <label for="model-select">Modell:</label>
+            <select id="model-select">
+                <option value="0">0 - Plankonvex mit hyperbolischer Eintrittsfläche</option>
+                <option value="1" selected>1 - Plankonvex mit hyperbolischer Austrittsfläche</option>
+                <option value="2">2 - Fresnel-Linse</option>
+            </select>
+        </div>
         <canvas id="radar-canvas"></canvas>
         <div id="surface-editor" aria-live="polite"></div>
     </main>
+    <script>
+        // Modellauswahl initialisieren und Handler hinzufügen
+        const modelSelect = document.getElementById('model-select');
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentModel = urlParams.get('model') || '1';
+        modelSelect.value = currentModel;
+        
+        modelSelect.addEventListener('change', (event) => {
+            const selectedModel = event.target.value;
+            window.location.href = `?model=${selectedModel}`;
+        });
+    </script>
     <script src="src/main.js"></script>
 </body>
 </html>

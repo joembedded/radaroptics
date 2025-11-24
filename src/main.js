@@ -1,7 +1,5 @@
 /* 
-Radaroptics Simulation - (C)JoEmbedded.de 
-Dieses Script ist ersteimal nur ein Fragment. Siehe Docu. 
-Ändern der Parameter und Optiken nur im Code.
+Sehr einfache (Radar-) Strahlenoptik-Simulation fuers "Radarli" Projekt 
 */
 
 // Umrechnungsfaktor: Pixel pro mm (anpassbar)
@@ -10,10 +8,17 @@ const rasterMm = 5; // Rasterabstand in mm
 const waveLengthMm = 5; // Vakuum-Wellenlänge in mm (z.B. 5mm = 60GHz   )
 
 // AUSWAHL: 0-2, siehe if()
-const usedModel = 1;
+// URL-Parameter auslesen
+const myUrlParams = new URLSearchParams(window.location.search);
+const modelParam = myUrlParams.get('model');
+let usedModel = modelParam !== null ? parseInt(modelParam, 10) : 1;
+// Fallback auf 1, falls ungültig
+if (isNaN(usedModel) || usedModel < 0 || usedModel > 2) {
+    usedModel = 0;
+}
 
-let startAngleDeg = -30;
-let endAngleDeg = 30;
+let startAngleDeg = -36;
+let endAngleDeg = 36;
 let angleStep = 2;
 let anmerkung = "Unbekanntes Modell";
 // Das sind die möglichen optischen Flächen. Mindestens sind noetig
@@ -24,55 +29,58 @@ const opticalSurfaces = [];
 
 if (usedModel === 0) {
     anmerkung = "Grossem, plankonvexe Linse mit hyperbolischer Eintrittsfläche";
-    pxPerMm = 12;
+    pxPerMm = 10;
+
     // Variante 0- Eintrittsfläche Hyperbolische Linse    
     opticalSurfaces.push({
-        xFixed: 25,     // Fixpunkt an X=20mm
-        yMin: -23,   // von Y= -,, bis
-        yMax: 23,   // Y= ..
-        focusRadius: 20,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
-        relPermittivity: 3, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
+        xFixed: 10,     // Fixpunkt an X=20mm
+        yMin: -12.5,   // von Y= -,, bis
+        yMax: 12.5,   // Y= ..
+        focusRadius: 6.5,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        relPermittivity: 2.7, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
         hyperK: -2.7 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
     // Austrittsfläche - Fuer planaere Linse EBEN
     opticalSurfaces.push({
-        xFixed: 35,     // Fixpunkt an X=20mm
-        yMin: -23,   // von Y= -,, bis
-        yMax: 23,   // Y= ..
+        xFixed: 16.5,     // Fixpunkt an X>=16.5mm
+        yMin: -12.5,   // von Y= -,, bis
+        yMax: 12.5,   // Y= ..
         focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
         relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
         hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
     // Ende Variante 0
 } else if (usedModel === 1) {
-    anmerkung = "Plankonvexe Linse mit hyperbolischer/sphärischer Austrittsfläche";
+    anmerkung = "Plankonvexe Linse mit hyperbolischer/sphärischer Austrittsfläche (mit hyperK=0 als Sphäre)";
     pxPerMm = 12;
     // Variante 0- Austrittsfläche Hyperbolische Linse    
     // Eintrittsflache - Fuer planaere Linse EBEN
     opticalSurfaces.push({
-        xFixed: 10.5,     // Fixpunkt an X=20mm
-        yMin: -15,   // von Y= -,, bis
-        yMax: 15,   // Y= ..
-        focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        xFixed: 15,     // Fixpunkt an X=
+        yMin: -12.5,   // von Y= -,, bis
+        yMax: 12.5,   // Y= ..
+        focusRadius: 0,   // Brennweite mm, negativ = Konkav, positiv = Konvex, 0: Ebene
         relPermittivity: 2.7, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
         hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
     // Austrittsfläche - Hyperbolisch/Sphaerisch
     opticalSurfaces.push({
-        xFixed: 20.5,     // Fixpunkt an X=20mm
-        yMin: -12,   // von Y= -,, bis
-        yMax: 12,   // Y= ..
-        focusRadius: -12,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        xFixed: 23,     // Fixpunkt an X=20mm
+        yMin: -12.5,   // von Y= -,, bis
+        yMax: 12.5,   // Y= ..
+        focusRadius: -13.5,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
         relPermittivity: 1, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
-        hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+        hyperK: -0.5 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
     // Ende Variante 1
 
 } else if (usedModel === 2) {
+    startAngleDeg = -30;
+    endAngleDeg = 30;
 
     anmerkung = "Fresnel-Linse (schick, aber evtl. nicht maximal optimal)";
     // Variante Model 3- Fresnel Linse - Raender zuerst!
-       opticalSurfaces.push({
+    opticalSurfaces.push({
         xFixed: 25.8,     // Fixpunkt an X=20mm
         yMin: -23.0,   // von Y= -,, bis
         yMax: -10.0,   // Y= ..
@@ -315,8 +323,9 @@ function handleSurfaceNameClick(surface, name) {
     Sagitta-Kontroll-Werte:
     ------------------------------   
 `;
-    for (let i = 0; i < 9; i++) {
-        const y = surface.yMin + (surface.yMax - surface.yMin) * i / 8;
+    const anzWerte = 15;
+    for (let i = 0; i < anzWerte; i++) {
+        const y = surface.yMin + (surface.yMax - surface.yMin) * i / (anzWerte - 1);
         const sag = calcSag(y, surface.focusRadius, surface.hyperK);
         details += `    y: ${y.toFixed(2)} mm => sag: ${sag.toFixed(4)} mm\n`;
     }
