@@ -30,7 +30,6 @@ const opticalSurfaces = [];
 
 if (usedModel === 0) {
     anmerkung = "Grossem, plankonvexe Linse mit hyperbolischer Eintrittsfläche";
-    pxPerMm = 10;
 
     // Variante 0- Eintrittsfläche Hyperbolische Linse    
     opticalSurfaces.push({
@@ -52,9 +51,9 @@ if (usedModel === 0) {
     });
     // Ende Variante 0
 } else if (usedModel === 1) {
-    anmerkung = "Plankonvexe Linse mit hyperbolischer/sphärischer Austrittsfläche (mit hyperK=0 als Sphäre)";
+    anmerkung = "Plankonvexe Linse mit hyperbolischer(hyperK<0)/sphärischer(hyperK=0) Austrittsfläche";
     pxPerMm = 12;
-    // Variante 0- Austrittsfläche Hyperbolische Linse    
+    // Variante - Austrittsfläche Hyperbolische Linse  - als Sphäre gut druckbar
     // Eintrittsflache - Fuer planaere Linse EBEN
     opticalSurfaces.push({
         xFixed: 15,     // Fixpunkt an X=
