@@ -1,5 +1,6 @@
 /* 
 Sehr einfache (Radar-) Strahlenoptik-Simulation fuers "Radarli" Projekt 
+
 */
 
 // Umrechnungsfaktor: Pixel pro mm (anpassbar)
