@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="utf-8">
     <title>radaroptics</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="src/styles.css">
 </head>
+
 <body>
     <main>
-        <h4>mm-Wave RadarOptics V0.11 - (C)JoEmbedded.de</h4>
+        <h4>mm-Wave RadarOptics V0.12 - (C)JoEmbedded.de</h4>
         <div class="model-selector">
             <label for="model-select">Modell:</label>
             <select id="model-select">
-                <option value="0">0 - Plankonvex mit hyperbolischer Eintrittsfläche</option>
-                <option value="1" selected>1 - Plankonvex mit hyperbolischer Austrittsfläche</option>
+                <option value="0" selected>0 - Plankonvex mit hyperbolischer Eintrittsfläche</option>
+                <option value="1">1 - Plankonvex mit hyperbolischer Austrittsfläche</option>
                 <option value="2">2 - Fresnel-Linse</option>
             </select>
         </div>
@@ -24,9 +26,9 @@
         // Modellauswahl initialisieren und Handler hinzufügen
         const modelSelect = document.getElementById('model-select');
         const urlParams = new URLSearchParams(window.location.search);
-        const currentModel = urlParams.get('model') || '1';
+        const currentModel = urlParams.get('model') || '0';
         modelSelect.value = currentModel;
-        
+
         modelSelect.addEventListener('change', (event) => {
             const selectedModel = event.target.value;
             window.location.href = `?model=${selectedModel}`;
@@ -34,4 +36,5 @@
     </script>
     <script src="src/main.js"></script>
 </body>
+
 </html>

@@ -12,14 +12,14 @@ const waveLengthMm = 5; // Vakuum-Wellenlänge in mm (z.B. 5mm = 60GHz   )
 // URL-Parameter auslesen
 const myUrlParams = new URLSearchParams(window.location.search);
 const modelParam = myUrlParams.get('model');
-let usedModel = modelParam !== null ? parseInt(modelParam, 10) : 1;
-// Fallback auf 1, falls ungültig
+let usedModel = modelParam !== null ? parseInt(modelParam, 10) : 0;
+// Fallback auf 0, falls ungültig
 if (isNaN(usedModel) || usedModel < 0 || usedModel > 2) {
     usedModel = 0;
 }
 
-let startAngleDeg = -36;
-let endAngleDeg = 36;
+let startAngleDeg = -35;
+let endAngleDeg = 35;
 let angleStep = 2;
 let anmerkung = "Unbekanntes Modell";
 // Das sind die möglichen optischen Flächen. Mindestens sind noetig
@@ -29,11 +29,12 @@ let anmerkung = "Unbekanntes Modell";
 const opticalSurfaces = [];
 
 if (usedModel === 0) {
-    anmerkung = "Grossem, plankonvexe Linse mit hyperbolischer Eintrittsfläche";
+    anmerkung = "Plankonvexe Linse mit hyperbolischer Eintrittsfläche";
 
-    // Variante 0- Eintrittsfläche Hyperbolische Linse    
+/*
+    // Variante 0a- Eintrittsfläche Hyperbolische Linse    
     opticalSurfaces.push({
-        xFixed: 10,     // Fixpunkt an X=20mm
+        xFixed: 10,     // Fixpunkt an
         yMin: -12.5,   // von Y= -,, bis
         yMax: 12.5,   // Y= ..
         focusRadius: 6.5,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
@@ -49,6 +50,27 @@ if (usedModel === 0) {
         relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
         hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
+*/
+
+    // Variante 0b- Eintrittsfläche Hyperbolische Linse    
+    opticalSurfaces.push({
+        xFixed: 13,     // Fixpunkt 
+        yMin: -17,   // von Y= -,, bis
+        yMax: 17,   // Y= ..
+        focusRadius: 8,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        relPermittivity: 2.5, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
+        hyperK: -2.5 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+    });
+    // Austrittsfläche - Fuer planaere Linse EBEN
+    opticalSurfaces.push({
+        xFixed: 24,     // Austrittspunkt - Nicht ganz so kritisch, da STrahlen pereits parallel
+        yMin: -17,   // von Y= -,, bis
+        yMax: 17,   // Y= ..
+        focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
+        hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+    });
+
     // Ende Variante 0
 } else if (usedModel === 1) {
     anmerkung = "Plankonvexe Linse mit hyperbolischer(hyperK<0)/sphärischer(hyperK=0) Austrittsfläche";
@@ -60,7 +82,7 @@ if (usedModel === 0) {
         yMin: -12.5,   // von Y= -,, bis
         yMax: 12.5,   // Y= ..
         focusRadius: 0,   // Brennweite mm, negativ = Konkav, positiv = Konvex, 0: Ebene
-        relPermittivity: 2.7, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
+        relPermittivity: 2.5, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
         hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
     // Austrittsfläche - Hyperbolisch/Sphaerisch
@@ -68,9 +90,9 @@ if (usedModel === 0) {
         xFixed: 23,     // Fixpunkt an X=20mm
         yMin: -12.5,   // von Y= -,, bis
         yMax: 12.5,   // Y= ..
-        focusRadius: -13.5,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        focusRadius: -11.7,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
         relPermittivity: 1, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
-        hyperK: -0.5 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+        hyperK: -0.6 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
     // Ende Variante 1
 

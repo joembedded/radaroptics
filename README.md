@@ -4,65 +4,67 @@
 🚀 **[Live Demo](https://joembedded.github.io/radaroptics/)** - Direkt im Browser testen!
 
 ![Screenshot der Simulation](img/screen.png)
-![Kohaerente Fresnel Linse](img/fresnel.png)
+![Kohärente Fresnel Linse](img/fresnel.png)
 
-## Ueberblick
+## Überblick
 - Visualisiert Brechung und Fokussierung von mm-Wellen-Radarstrahlen in 2D.
 - Simuliert die Wirkung dielektrischer Linsen mit frei definierbaren Geometrien.
-- Unterstuetzt iterative Linsenkonstruktion durch schnelle Anpassung der Parameter in `src/main.js`.
-- Liefert RealWorld Ergebnisse! Fuer echte, 3D-druckbare Linsen!
+- Unterstützt iterative Linsenkonstruktion durch schnelle Anpassung der Parameter in `src/main.js`.
+- Liefert RealWorld Ergebnisse! Für echte, 3D-druckbare Linsen!
 
 ## Was ist Radaroptik?
-Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ breite Abstrahlkeule mit 60 bis 90 Grad. Fuer Punkt- oder Distanzmessungen ist eine fokussierte Keule jedoch deutlich praeziser. In Bereichen um 60 GHz betraegt die Wellenlaenge nur noch ca. 5 mm - gross genug, um dielektrische Linsen wie klassische Optiken zu verwenden und dennoch deutlich einfacher zu fertigen als optische Linsen, z.B. mit einem einfachen 3D-Drucker.
+Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ breite Abstrahlkeule mit 60 bis 90 Grad. Für Punkt- oder Distanzmessungen ist eine fokussierte Keule jedoch deutlich präziser. In Bereichen um 60 GHz beträgt die Wellenlänge nur noch ca. 5 mm - groß genug, um dielektrische Linsen wie klassische Optiken zu verwenden und dennoch deutlich einfacher zu fertigen als optische Linsen, z.B. mit einem einfachen 3D-Drucker.
 
-Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschliesslich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Fuer den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis haeufig aus.
+Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschließlich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Für den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis häufig aus.
 
-In der Praxis findet man fuer die ueblicherweise eingesetzten Materialien ABS, PLA, PETG und fuer 100%-Infill (fuer 3D-FDM-Druck) Dielektrizitaetskonstanten &epsilon;<sub>r</sub> zwischen etwa 2.5 und 3.0 (siehe './Docus' ). Da die Brechnung zu Luft die Wurzel &radic;(&epsilon;<sub>r</sub>) ist, sind die Designs alle aehnlich und ueber leichte Variationen Distanz/Radius kann man leicht das Optimum finden. Sphaerische Linsen lassen sich am einfachsten drucken, daher immer ein guter Ausgangspunkt.
+In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, PLA, PETG und für 100%-Infill (für 3D-FDM-Druck) Dielektrizitätskonstanten &epsilon;<sub>r</sub> zwischen etwa 2.4 und 3.2 ([siehe ./Docus/]('./Docus/ChatGPT_DielektrischeEigenschaftenABS_PLA_PETG_60GHz.md') ). Da die Brechnung zu Luft die Wurzel &radic;(&epsilon;<sub>r</sub>) ist, sind die Designs alle ähnlich und über leichte Variationen Distanz/Radius kann man leicht das Optimum finden. Sphärische Linsen (ohne asphärische Korrekturen) lassen sich am einfachsten drucken, sind daher immer ein guter Ausgangspunkt. "Unebenheiten" der Linse, die deutlich unter der Wellenlänge liegen, sind kein Problem.
 
-Für ein getestetes PLA-Material wurde so experimentell ein &epsilon;<sub>r</sub> ca. 3.1 bestimmt.
+Normalerweise sind die ε<sub>r</sub> für handelsübliches Material nicht bekannt. Eine grobe Messung ist möglich, indem ein Testblock des Materials in den Strahl einer Distanzmessung eingefügt wird. Dadurch misst der Sensor eine etwas größere Distanz. Diese, auf die Dicke des Testblocks bezogen, ergibt die relative Lichtgeschwindigkeit c<sub>r</sub> im Material und damit ε<sub>r</sub> = (c<sub>r</sub>/c<sub>0</sub>)².
+Für ein getestetes PLA-Material wurde so experimentell ein ε<sub>r</sub> von ca. 2.5 bestimmt.
 
 > [!Tip] 
-> "Echtes" 100%-Infill laesst sich nie erreichen. In kleinen Hohlraeumen kann sich immer noch Wasser sammeln. Gedruckte Linsen sind i.d.R. nicht wirklich fuer den Ausseneinsatz geeignet.
+> "Echtes" 100%-Infill lässt sich nie erreichen. In kleinen Hohlräumen kann sich immer noch Wasser sammeln. Gedruckte Linsen sind i.d.R. nicht wirklich für den Außeneinsatz geeignet.
 
 Presets:
 - 0: plankonvexe, hyperbolische Linse mit planer Austrittsfläche
-- 1: plankonvexe, hyperbolisch/sphaerische Linse mit planer Eintrittsfläche
-- 2: plane, kohaerente Fresnel-Linse (Achtung: flach, aber hier werden 2 Wellenzuege ueberlagert, evtl. also evtl. etwas weniger exakt)
+- 1: plankonvexe, hyperbolisch/sphärische Linse mit planer Eintrittsfläche
+- 2: plane, kohärente Fresnel-Linse (Achtung: flach, aber hier werden 2 Wellenzüge überlagert, evtl. also evtl. etwas weniger exakt)
 
 ## Schnellstart/Modellauswahl
 1. Repository klonen oder herunterladen.
-2. `index.html` in einem aktuellen Browser oeffnen (lokal, kein Build-Schritt noetig).
-3. In `src/main.js` die gewuenschten Parameter (primaer `useModel`, `waveLengthMm`) anpassen.
-4. Seite im Browser neu laden, um Aenderungen zu sehen.
+2. `index.html` in einem aktuellen Browser öffnen (lokal, kein Build-Schritt nötig).
+3. In `src/main.js` die gewünschten Parameter (primär `useModel`, `waveLengthMm`) anpassen.
+4. Seite im Browser neu laden, um Änderungen zu sehen.
 
 ## Aufbau der Simulation
-- **Emitter (rot):** Punktquelle am Ursprung, deren Abstrahlwinkel ueber `startAngleDeg`, `endAngleDeg` und `angleStep` gesteuert wird.
-- **Optische Flaechen:** In `opticalSurfaces` definierte Uebergaenge mit fixen X-Positionen (`xFixed`) und vertikalem Ausdehnungsbereich (`yMin`, `yMax`). Jede Flaeche kann plan, konvex oder konkav sein.
-- **Brechung:** Die relative Dielektrizitaetskonstante (`relPermittivity`) wird fuer den Snellius-Effekt genutzt. `focusRadius` beschreibt die Kruemmung (negativ = konvex, positiv = konkav, 0 = plan).
-- **Asphaerizitaet:** Ueber `hyperK` kann die Flaeche von sphaerisch (0) hin zu paraboloid oder hyperbolisch (kleiner -1) verzerrt werden.
-- **Detektorflaeche:** Eine entfernte Flaeche am Ende des Arrays dient als "Leinwand" fuer austretende Strahlen.
+- **Emitter (rot):** Punktquelle am Ursprung, deren Abstrahlwinkel über `startAngleDeg`, `endAngleDeg` und `angleStep` gesteuert wird.
+- **Optische Flächen:** In `opticalSurfaces` definierte Übergänge mit fixen X-Positionen (`xFixed`) und vertikalem Ausdehnungsbereich (`yMin`, `yMax`). Jede Fläche kann plan, konvex oder konkav sein.
+- **Brechung:** Die relative Dielektrizitätskonstante (`relPermittivity`) wird für den Snellius-Effekt genutzt. `focusRadius` beschreibt die Krümmung (negativ = konvex, positiv = konkav, 0 = plan).
+- **Asphärizität:** Über `hyperK` kann die Fläche von sphärisch (0) hin zu paraboloid oder hyperbolisch (kleiner -1) verzerrt werden.
+- **Detektorfläche:** Eine entfernte Fläche am Ende des Arrays dient als "Leinwand" für austretende Strahlen.
 
 ## Wichtige Parameter (Auszug)
 | Parameter | Datei / Abschnitt | Bedeutung |
 |-----------|-------------------|-----------|
 | `pxPerMm` | `src/main.js` | Skalierung zwischen physikalischen Millimetern und Canvas-Pixeln. |
-| `rasterMm` | `src/main.js` | Rasterabstand fuer das Hintergrundgitter. |
-| `waveLengthMm` | `src/main.js` | Gebrauchte Radar-Wellenlaenge (z.B. 5 mm bei 60 GHz). |
-| `startAngleDeg`, `endAngleDeg`, `angleStep` | `drawRays()` | Oeffnungswinkel und Aufloesung der Abstrahlkeule. |
-| `focusRadius` | `opticalSurfaces` | Kruemmungsradius der Flaeche; Vorzeichen bestimmt die Orientierung. |
-| `relPermittivity` | `opticalSurfaces` | Relative Permittivitaet des Mediums hinter der Flaeche. |
-| `hyperK` | `opticalSurfaces` | Formfaktor fuer sphaerische, paraboloide oder hyperbolische Flaechen. |
+| `rasterMm` | `src/main.js` | Rasterabstand für das Hintergrundgitter. |
+| `waveLengthMm` | `src/main.js` | Gebrauchte Radar-Wellenlänge (z.B. 5 mm bei 60 GHz). |
+| `startAngleDeg`, `endAngleDeg`, `angleStep` | `drawRays()` | Öffnungswinkel und Auflösung der Abstrahlkeule. |
+| `focusRadius` | `opticalSurfaces` | Krümmungsradius der Fläche; Vorzeichen bestimmt die Orientierung. |
+| `relPermittivity` | `opticalSurfaces` | Relative Permittivität des Mediums hinter der Fläche. |
+| `hyperK` | `opticalSurfaces` | Formfaktor für sphärische, paraboloide oder hyperbolische Flächen. |
 
 ## Linsenmaterialien
-ABS laesst sich im SLA- oder FDM-Druck unkompliziert verarbeiten und besitzt bei 60 GHz typischerweise eine relative Permittivitaet von ca. 3. In Kombination mit einem leicht hyperbolischen Profil (`hyperK ~ -2.7`) liefert die Simulation fuer den im Projekt hinterlegten Radar-Sensor gute Ergebnisse. Andere Materialien (z.B. PETG, PTFE) koennen ueber ihre jeweiligen Permittivitaeten eingebunden werden.
+ABS lässt sich im SLA- oder FDM-Druck unkompliziert verarbeiten und besitzt bei 60 GHz typischerweise eine relative Permittivität von ca. 3. In Kombination mit einem leicht hyperbolischen Profil (`hyperK ~ -2.7`) liefert die Simulation für den im Projekt hinterlegten Radar-Sensor gute Ergebnisse. Andere Materialien (z.B. PETG, PTFE) können über ihre jeweiligen Permittivitäten eingebunden werden.
 
 ## 'Radarli'-Sensor
-Die Vorlage entstand fuer den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470" (aka 'Radarli'). Weitere Dokumentation und PDFs stehen unter folgendem Link bereit:
+Die Vorlage entstand für den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470" (aka 'Radarli'). Weitere Dokumentation und PDFs stehen unter folgendem Link bereit:
 
 <https://joembedded.de/x3/ltx_firmware/index.php?dir=./Open-SDI12-Blue-Sensors/0470_RadarDistA>
 
 ## Anmerkungen
 
-Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rueckstreuung und keine Intensitaetsverteilung. Die technische Berechnung/Wellenzuege sollten aber exakt den physikalischen Gesetzen entsprechen. Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend!
+Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die technische Berechnung/Wellenzüge sollten aber exakt den physikalischen Gesetzen entsprechen. Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend!
 
 *Viel Erfolg beim Design eigener Radaroptiken!*
+
