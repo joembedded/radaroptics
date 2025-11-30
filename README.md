@@ -26,6 +26,7 @@
 - Unterstützt iterative Linsenkonstruktion durch schnelle Anpassung der Parameter in `src/main.js`.
 - Liefert RealWorld Ergebnisse! Für echte, 3D-druckbare Linsen!
 - Komplette Integration in FreeCAD, Linsen lassen sich (fast) komplett automatisiert erzeugen 😄👍
+- Kurzes Video dazu: https://youtu.be/QgKHenz11SE
 
 ## Was ist Radaroptik?
 Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ breite Abstrahlkeule mit 60 bis 90 Grad. Für Punkt- oder Distanzmessungen ist eine fokussierte Keule jedoch deutlich präziser. In Bereichen um 60 GHz beträgt die Wellenlänge nur noch ca. 5 mm - groß genug, um dielektrische Linsen wie klassische Optiken zu verwenden und dennoch deutlich einfacher zu fertigen als optische Linsen, z.B. mit einem einfachen 3D-Drucker.
