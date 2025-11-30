@@ -345,11 +345,23 @@ function handleSurfaceNameClick(surface, name) {
     Sagitta-Kontroll-Werte:
     ------------------------------   
 `;
-    const anzWerte = 15;
+    const anzWerte = 25; // Anzahl der Kontrollwerte, sollte ungerade sein (wg. 0)
+    let poslist = 
+`# Sagitta-Tabelle fuer ${name}
+# Speichern als 'c:/temp/stuetz.dat' fuer FreeCAD Import
+# Quelle: https://github.com/joembedded/radaroptics
+# focusRadius: ${surface.focusRadius} mm
+# hyperK: ${surface.hyperK}
+# y(mm) => sag(mm), (Anm.: Nur Werte y >= 0)
+# ------------------------------------
+`;
     for (let i = 0; i < anzWerte; i++) {
         const y = surface.yMin + (surface.yMax - surface.yMin) * i / (anzWerte - 1);
         const sag = calcSag(y, surface.focusRadius, surface.hyperK);
-        details += `    y: ${y.toFixed(2)} mm => sag: ${sag.toFixed(4)} mm\n`;
+        details += `    y: ${y.toFixed(3)} mm => sag: ${sag.toFixed(4)} mm\n`;
+        if(y>=0) {
+            poslist += `${y.toFixed(3)},${sag.toFixed(4)}\n`;
+        }   
     }
 
     // Popup-Fenster erstellen
@@ -371,13 +383,39 @@ function handleSurfaceNameClick(surface, name) {
     popup.style.maxHeight = '80vh';
     popup.style.overflowY = 'auto';
     popup.style.fontFamily = 'monospace';
-    popup.style.border = '1.5px solid #0a225d'; // Dünner dunkelblauer Rahmen
+    popup.style.border = '1.5px solid #0a225d';
+
+    // Button-Container
+    const btnContainer = document.createElement('div');
+    btnContainer.style.float = 'right';
+    btnContainer.style.display = 'flex';
+    btnContainer.style.gap = '8px';
+
+    // Clipboard-Button
+    const clipboardBtn = document.createElement('button');
+                clipboardBtn.innerHTML = 'Kopiere alle (y >= 0) &#128203;';
+    clipboardBtn.style.background = '#444';
+    clipboardBtn.style.color = '#fff';
+    clipboardBtn.style.border = 'none';
+    clipboardBtn.style.padding = '4px 12px';
+    clipboardBtn.style.borderRadius = '4px';
+    clipboardBtn.style.cursor = 'pointer';
+    clipboardBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(poslist);
+            clipboardBtn.textContent = 'OK, Kopiert! ✓ ';
+            setTimeout(() => {
+                clipboardBtn.innerHTML = 'Kopiere alle (y >= 0) &#128203;';
+            }, 2000);
+        } catch (err) {
+            console.error('Clipboard-Fehler:', err);
+            alert('Fehler beim Kopieren in die Zwischenablage');
+        }
+    });
 
     // Close-Button
     const closeBtn = document.createElement('button');
     closeBtn.textContent = 'Schließen';
-    closeBtn.style.float = 'right';
-    closeBtn.style.marginLeft = '10px';
     closeBtn.style.background = '#444';
     closeBtn.style.color = '#fff';
     closeBtn.style.border = 'none';
@@ -389,11 +427,14 @@ function handleSurfaceNameClick(surface, name) {
         popup = null;
     });
 
+    btnContainer.appendChild(clipboardBtn);
+    btnContainer.appendChild(closeBtn);
+
     // Inhalt
     const pre = document.createElement('pre');
     pre.textContent = details;
 
-    popup.appendChild(closeBtn);
+    popup.appendChild(btnContainer);
     popup.appendChild(pre);
 
     document.body.appendChild(popup);

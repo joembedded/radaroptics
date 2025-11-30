@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Dieser Macro liest die Stuetzstellen ins Freecad und erzeugt einen 
+Spline daraus. Dann noch bissl Kontur ergänzen und Drehkörper
+daraus erstellen.
+Name: radarli_freecad_import
+"""
+import FreeCAD as App
+import FreeCADGui as Gui
+import Part
+import Sketcher
+import datetime
+
+# Datei einlesen - erzeugt vom Script. ggf. Namen anpassen
+datei = 'c:/temp/stuetz.dat'
+punkte = []
+
+with open(datei, 'r') as f:
+    for zeile in f:
+        zeile = zeile.strip()
+        if zeile and not zeile.startswith('#'):
+            teile = zeile.split(',')
+            x = float(teile[0])
+            y = float(teile[1])  
+            punkte.append((x, -y)) # Invertieren (damit nach unten druckbar)
+
+# Punkte an der FreeCAD-Konsole ausgeben
+App.Console.PrintMessage("Anzahl Punkte: {}\n".format(len(punkte)))
+for i, (x, y) in enumerate(punkte):
+    App.Console.PrintMessage("Punkt {}: x={}, y={}\n".format(i, x, y))
+
+# Sketch erstellen
+doc = App.ActiveDocument
+if doc is None:
+    doc = App.newDocument()
+
+sketch = doc.addObject('Sketcher::SketchObject', 'radarli')
+sketch.Placement = App.Placement(App.Vector(0, 0, 0), 
+                                  App.Rotation(App.Vector(0, 1, 0), 90))
+
+# B-Spline durch alle Punkte (in XY-Ebene)
+vectors = [App.Vector(x, y, 0) for x, y in punkte]
+bspline = Part.BSplineCurve()
+bspline.interpolate(vectors)
+spline_idx = sketch.addGeometry(bspline)
+
+# Anfangspunkt des Splines auf (0,0) fixieren
+sketch.addConstraint(Sketcher.Constraint('Coincident', spline_idx, 1, -1, 1))  # Origin
+# Endpunkt des Splines fixieren (an seiner aktuellen Position)
+end_point = vectors[-1]
+sketch.addConstraint(Sketcher.Constraint('DistanceX', spline_idx, 2, end_point.x))
+sketch.addConstraint(Sketcher.Constraint('DistanceY', spline_idx, 2, end_point.y))
+
+doc.recompute()
+Gui.activeDocument().setEdit(sketch.Name)
