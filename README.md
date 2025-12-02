@@ -19,6 +19,9 @@ Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ brei
 
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschließlich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Für den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis häufig aus.
 
+> [!Note]
+> Die Simulation zeigt nur Vektoren. Dadurch, dass die Radar-Wellenlänge im Verhältnis zu den geometrischen Dimensionen recht hoch ist, führt das in der Realität zu einer Unschärfe. Realistische Öffnungswinkel einfacher Radar-Optiken liegen im Bereich von minimal ca. 10°.
+
 In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, PLA, PETG und für 100%-Infill (für 3D-FDM-Druck) Dielektrizitätskonstanten &epsilon;<sub>r</sub> zwischen etwa 2.5 und 3.0 ([siehe './Docus/...'](./Docus/ChatGPT_DielektrischeEigenschaftenABS_PLA_PETG_60GHz.md)). Da die Brechnung zu Luft die Wurzel &radic;(&epsilon;<sub>r</sub>) ist, sind die Designs alle ähnlich und über leichte Variationen Distanz/Radius kann man leicht das Optimum finden. Sphärische Linsen (ohne asphärische Korrekturen) lassen sich am einfachsten drucken, sind daher immer ein guter Ausgangspunkt. "Unebenheiten" der Linse, die deutlich unter der Wellenlänge liegen, sind kein Problem.
 
 Normalerweise sind die ε<sub>r</sub> für handelsübliches Material nicht bekannt. Eine grobe Messung ist möglich, indem ein Testblock des Materials in den Strahl einer Distanzmessung eingefügt wird. Dadurch misst der Sensor eine etwas größere Distanz. Diese, auf die Dicke des Testblocks bezogen, ergibt die relative Lichtgeschwindigkeit c<sub>r</sub> im Material und damit ε<sub>r</sub> = (c<sub>r</sub>/c<sub>0</sub>)².
@@ -71,6 +74,6 @@ Die Vorlage entstand für den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470
 
 ## Anmerkungen
 
-Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die technische Berechnung/Wellenzüge sollten aber exakt den physikalischen Gesetzen entsprechen. Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend!
+Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die technische Berechnung/Wellenzüge sollten aber exakt den physikalischen Gesetzen entsprechen. Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend und stimmen sehr gut mit den erwarteten Werten überein.
 
 *Viel Erfolg beim Design eigener Radaroptiken!* 😊🎯✨

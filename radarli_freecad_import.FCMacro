@@ -10,7 +10,6 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import Part
 import Sketcher
-import datetime
 
 # Datei einlesen - erzeugt vom Script. ggf. Namen anpassen
 datei = 'c:/temp/stuetz.dat'
