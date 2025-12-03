@@ -54,18 +54,18 @@ if (usedModel === 0) {
 
     // Variante 0b- Eintrittsfläche Hyperbolische Linse    
     opticalSurfaces.push({
-        xFixed: 13,     // Fixpunkt 
-        yMin: -17,   // von Y= -,, bis
-        yMax: 17,   // Y= ..
-        focusRadius: 8,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        xFixed: 10,     // Fixpunkt 
+        yMin: -16.66,   // von Y= -,, bis
+        yMax: 16.66,   // Y= ..
+        focusRadius: 6.1,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
         relPermittivity: 2.5, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
-        hyperK: -2.5 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+        hyperK: -2.4 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
     // Austrittsfläche - Fuer planaere Linse EBEN
     opticalSurfaces.push({
-        xFixed: 24,     // Austrittspunkt - Nicht ganz so kritisch, da STrahlen pereits parallel
-        yMin: -17,   // von Y= -,, bis
-        yMax: 17,   // Y= ..
+        xFixed: 21,     // Austrittspunkt - Nicht ganz so kritisch, da STrahlen pereits parallel
+        yMin: -16.66,   // von Y= -,, bis
+        yMax: 16.66,   // Y= ..
         focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
         relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
         hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
