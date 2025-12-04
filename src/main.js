@@ -73,7 +73,7 @@ if (usedModel === 0) {
 
     // Ende Variante 0
 } else if (usedModel === 1) {
-    anmerkung = "Plankonvexe Linse mit hyperbolischer(hyperK<0)/sphärischer(hyperK=0) Austrittsfläche";
+    anmerkung = "Plankonvexe Linse mit (a-/)sphärischer Austrittsfläche";
 
     // Variante - Austrittsfläche Hyperbolische Linse  - als Sphäre gut druckbar
     // Eintrittsflache - Fuer planaere Linse EBEN

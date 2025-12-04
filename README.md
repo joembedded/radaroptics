@@ -32,7 +32,7 @@ Für ein getestetes PLA-Material wurde so experimentell ein ε<sub>r</sub> von c
 
 Presets:
 - 0: plankonvexe, hyperbolische Linse mit planer Austrittsfläche
-- 1: plankonvexe, hyperbolisch/sphärische Linse mit planer Eintrittsfläche
+- 1: plankonvexe, (a-/)sphärische Linse mit planer Eintrittsfläche (Anmerkung: auch schon als rein sphärische Linse leicht druckbar und gute Test-Ergebnisse)
 - 2: plane, kohärente Fresnel-Linse (Achtung: flach, aber hier werden 2 Wellenzüge überlagert, evtl. also etwas weniger exakt)
 
 ## Schnellstart/Modellauswahl
