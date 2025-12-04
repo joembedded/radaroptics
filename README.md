@@ -20,7 +20,7 @@ Moderne mm-Wellen-Radarchips (z.B. ACCONEER A121) besitzen oft eine relativ brei
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschließlich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Für den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis häufig aus.
 
 > [!Note]
-> Die Simulation zeigt nur Vektoren. Dadurch, dass die Radar-Wellenlänge im Verhältnis zu den geometrischen Dimensionen recht hoch ist, führt das in der Realität zu einer Unschärfe. Realistische Öffnungswinkel einfacher Radar-Optiken liegen im Bereich von minimal ca. 10°.
+> Die Simulation zeigt nur Vektoren. Dadurch, dass die Radar-Wellenlänge im Verhältnis zu den geometrischen Dimensionen recht hoch ist, führt das in der Realität zu einer Unschärfe. Realistische Öffnungswinkel einfacher, "kleiner" Radar-Optiken von z.B. 30 mm liegen im Bereich von minimal ca. 10 - 15 °. 
 
 In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, PLA, PETG und für 100%-Infill (für 3D-FDM-Druck) Dielektrizitätskonstanten &epsilon;<sub>r</sub> zwischen etwa 2.5 und 3.0 ([siehe './Docus/...'](./Docus/ChatGPT_DielektrischeEigenschaftenABS_PLA_PETG_60GHz.md)). Da die Brechnung zu Luft die Wurzel &radic;(&epsilon;<sub>r</sub>) ist, sind die Designs alle ähnlich und über leichte Variationen Distanz/Radius kann man leicht das Optimum finden. Sphärische Linsen (ohne asphärische Korrekturen) lassen sich am einfachsten drucken, sind daher immer ein guter Ausgangspunkt. "Unebenheiten" der Linse, die deutlich unter der Wellenlänge liegen, sind kein Problem.
 

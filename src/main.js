@@ -31,35 +31,35 @@ const opticalSurfaces = [];
 if (usedModel === 0) {
     anmerkung = "Plankonvexe Linse mit hyperbolischer Eintrittsfläche";
 
-/*
-    // Variante 0a- Eintrittsfläche Hyperbolische Linse    
-    opticalSurfaces.push({
-        xFixed: 10,     // Fixpunkt an
-        yMin: -12.5,   // von Y= -,, bis
-        yMax: 12.5,   // Y= ..
-        focusRadius: 6.5,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
-        relPermittivity: 2.7, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
-        hyperK: -2.7 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
-    });
-    // Austrittsfläche - Fuer planaere Linse EBEN
-    opticalSurfaces.push({
-        xFixed: 16.5,     // Fixpunkt an X>=16.5mm
-        yMin: -12.5,   // von Y= -,, bis
-        yMax: 12.5,   // Y= ..
-        focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
-        relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
-        hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
-    });
-*/
+    /*
+        // Variante 0a- Eintrittsfläche Hyperbolische Linse    
+        opticalSurfaces.push({
+            xFixed: 10,     // Fixpunkt an
+            yMin: -12.5,   // von Y= -,, bis
+            yMax: 12.5,   // Y= ..
+            focusRadius: 6.5,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+            relPermittivity: 2.7, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
+            hyperK: -2.7 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+        });
+        // Austrittsfläche - Fuer planaere Linse EBEN
+        opticalSurfaces.push({
+            xFixed: 16.5,     // Fixpunkt an X>=16.5mm
+            yMin: -12.5,   // von Y= -,, bis
+            yMax: 12.5,   // Y= ..
+            focusRadius: 0,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+            relPermittivity: 1, // relative Permittivität, danach Medium, Brechungsindex auch 1 (Luft)
+            hyperK: 0 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+        });
+    */
 
     // Variante 0b- Eintrittsfläche Hyperbolische Linse    
     opticalSurfaces.push({
         xFixed: 10,     // Fixpunkt 
         yMin: -16.66,   // von Y= -,, bis
         yMax: 16.66,   // Y= ..
-        focusRadius: 6.1,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
+        focusRadius: 5.8,   // Brennweite 100mm, negativ = Konkav, positiv = Konvex, 0: Ebene
         relPermittivity: 2.5, // relative Permittivität, danach Medium. 3: Brechungsindex: n = sqrt(3) = 1.732
-        hyperK: -2.4 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+        hyperK: -2.5 // hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
     });
     // Austrittsfläche - Fuer planaere Linse EBEN
     opticalSurfaces.push({
@@ -74,7 +74,7 @@ if (usedModel === 0) {
     // Ende Variante 0
 } else if (usedModel === 1) {
     anmerkung = "Plankonvexe Linse mit hyperbolischer(hyperK<0)/sphärischer(hyperK=0) Austrittsfläche";
-    
+
     // Variante - Austrittsfläche Hyperbolische Linse  - als Sphäre gut druckbar
     // Eintrittsflache - Fuer planaere Linse EBEN
     opticalSurfaces.push({
@@ -346,8 +346,8 @@ function handleSurfaceNameClick(surface, name) {
     ------------------------------   
 `;
     const anzWerte = 25; // Anzahl der Kontrollwerte, sollte ungerade sein (wg. 0)
-    let poslist = 
-`# Sagitta-Tabelle fuer ${name}
+    let poslist =
+        `# Sagitta-Tabelle fuer ${name}
 # Speichern als 'c:/temp/stuetz.dat' fuer FreeCAD Import
 # Quelle: https://github.com/joembedded/radaroptics
 # focusRadius: ${surface.focusRadius} mm
@@ -359,9 +359,9 @@ function handleSurfaceNameClick(surface, name) {
         const y = surface.yMin + (surface.yMax - surface.yMin) * i / (anzWerte - 1);
         const sag = calcSag(y, surface.focusRadius, surface.hyperK);
         details += `    y: ${y.toFixed(3)} mm => sag: ${sag.toFixed(4)} mm\n`;
-        if(y>=0) {
+        if (y >= 0) {
             poslist += `${y.toFixed(3)},${sag.toFixed(4)}\n`;
-        }   
+        }
     }
 
     // Popup-Fenster erstellen
@@ -393,7 +393,7 @@ function handleSurfaceNameClick(surface, name) {
 
     // Clipboard-Button
     const clipboardBtn = document.createElement('button');
-                clipboardBtn.innerHTML = 'Kopiere alle (y >= 0) &#128203;';
+    clipboardBtn.innerHTML = 'Kopiere alle (y >= 0) &#128203;';
     clipboardBtn.style.background = '#444';
     clipboardBtn.style.color = '#fff';
     clipboardBtn.style.border = 'none';
@@ -657,11 +657,11 @@ function drawWaveMm(rayVector, lineLenMm, relWaveLen, modulMm) {
     }
 }
 
-
-
 // Berechnet die sagitta (Versatz in x-Richtung) für einen gegebenen y-Wert und 
 // optionaler Brennweite (focusRadius != 0) oder Planfläche (focusRadius=0)
-// hyperK beschreibt die Aberation: hyperK=0: Kugel, K= -1: Parabel, K< -1: Hyperbel
+// hyperK (in der DIN ISO 10110 als 'konische Konstante' bezeichnet) beschreibt 
+// die Aberration der Linse bezüglich eines Kreises: 
+// hyperK=0: Kreis, K= -1: Parabel, K< -1: Hyperbel
 function calcSag(y, focusRadius, hyperK = 0) {
     if (focusRadius === 0) return 0; // War Planflache
     const hy2 = y * y;
