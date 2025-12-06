@@ -10,12 +10,12 @@
 - Visualisiert Brechung und Fokussierung von mm-Wellen-Radarstrahlen in 2D.
 - Simuliert die Wirkung dielektrischer Linsen mit frei definierbaren Geometrien.
 - Unterstützt iterative Linsenkonstruktion durch schnelle Anpassung der Parameter in `src/main.js`.
-- Liefert RealWorld Ergebnisse! Für echte, 3D-druckbare Linsen!
+- Liefert RealWorld Ergebnisse für echte, 3D-druckbare Linsen!
 - Komplette Integration in FreeCAD, Linsen lassen sich (fast) komplett automatisiert erzeugen 😄👍
 - Kurzes Video dazu: https://youtu.be/QgKHenz11SE
 
 ## Was ist Radaroptik?
-Moderne mm-Wellen-Radarchips (z. B. ACCONEER A121) besitzen häufig eine relativ breite Abstrahlkeule von 60 bis 90 Grad. Für Punkt- oder Distanzmessungen ist jedoch eine stärker fokussierte Keule besser geeignet. Bei Frequenzen um 60 GHz beträgt die Wellenlänge nur etwa 5 mm – groß genug, um dielektrische Linsen ähnlich wie in der optischen Abbildung zu verwenden, und gleichzeitig einfacher herstellbar, zum Beispiel mittels 3D-Druck.
+Moderne mm-Wellen-Radarchips (z. B. ACCONEER A121) besitzen häufig eine relativ breite Abstrahlkeule von 60 bis 90 Grad. Für Punkt- oder Distanzmessungen ist jedoch eine stärker fokussierte Keule besser geeignet. Bei Frequenzen um 60 GHz beträgt die Wellenlänge nur etwa 5 mm – groß genug, um dielektrische Linsen ähnlich wie in der optischen Abbildung zu verwenden, und gleichzeitig einfach herstellbar, zum Beispiel mittels 3D-Druck.
 
 Für mm-Wellen gelten die grundlegenden Prinzipien der Wellenoptik:
 - **Huygenssches Prinzip** – beschreibt die Ausbreitung von Wellenfronten
@@ -87,7 +87,6 @@ Die Vorlage entstand für den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470
 
 ## Anmerkungen
 
-Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die technische Berechnung/Wellenzüge sollten aber exakt den physikalischen Gesetzen entsprechen. Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend und stimmen sehr gut mit den erwarteten Werten überein.
+Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die Berechnung entspricht aber exakt den physikalischen Gesetzen.Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend und stimmen sehr gut mit den erwarteten Werten überein.
 
 *Viel Erfolg beim Design eigener Radaroptiken!* 😊🎯✨
-
