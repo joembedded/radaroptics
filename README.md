@@ -15,7 +15,7 @@
 - Kurzes Video dazu: https://youtu.be/QgKHenz11SE
 
 ## Was ist Radaroptik?
-Moderne mm-Wellen-Radarchips (z. B. ACCONEER A121) besitzen häufig eine relativ breite Abstrahlkeule von 60 bis 90 Grad. Für Punkt- oder Distanzmessungen ist jedoch eine stärker fokussierte Keule besser geeignet. Bei Frequenzen um 60 GHz beträgt die Wellenlänge nur etwa 5 mm – groß genug, um dielektrische Linsen ähnlich wie in der optischen Abbildung zu verwenden, und gleichzeitig einfach herstellbar, zum Beispiel mittels 3D-Druck.
+Moderne mm-Wellen-Radarchips besitzen häufig eine relativ breite Abstrahlkeule von 60 bis 90 Grad. Für Punkt- oder Distanzmessungen ist jedoch eine stärker fokussierte Keule besser geeignet. Bei Frequenzen um 60 GHz beträgt die Wellenlänge nur etwa 5 mm – groß genug, um dielektrische Linsen ähnlich wie in der optischen Abbildung zu verwenden, und gleichzeitig einfach herstellbar, zum Beispiel mittels 3D-Druck.
 
 Für mm-Wellen gelten die grundlegenden Prinzipien der Wellenoptik:
 - **Huygenssches Prinzip** – beschreibt die Ausbreitung von Wellenfronten
