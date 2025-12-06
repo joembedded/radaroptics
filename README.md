@@ -24,7 +24,7 @@ Für mm-Wellen gelten dabei die grundlegenden Prinzipien der Wellenoptik:
 
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschließlich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Für den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis häufig aus.
 
-> [!Note] Anmerkung
+> [!Note]
 > Die Simulation zeigt nur Vektoren. Dadurch, dass die Radar-Wellenlänge im Verhältnis zu den geometrischen Dimensionen recht hoch ist, führt das in der Realität zu einer Unschärfe. Realistische Öffnungswinkel einfacher, "kleiner" Radar-Optiken von z.B. 30 mm liegen im Bereich von minimal ca. 10 - 15 °. 
 
 In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, PLA, PETG und für 100%-Infill (für 3D-FDM-Druck) Dielektrizitätskonstanten $ε_r$ zwischen etwa 2.5 und 3.0 ([siehe './Docus/...'](./Docus/ChatGPT_DielektrischeEigenschaftenABS_PLA_PETG_60GHz.md)). Da die Brechnung zu Luft die Wurzel $\sqrt{ε_r}$ ist, sind die Designs alle ähnlich und über leichte Variationen Distanz/Radius kann man leicht das Optimum finden. Sphärische Linsen (ohne asphärische Korrekturen) lassen sich am einfachsten drucken, sind daher immer ein guter Ausgangspunkt. "Unebenheiten" der Linse, die deutlich unter der Wellenlänge liegen, sind kein Problem.
@@ -32,7 +32,7 @@ In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, P
 Normalerweise sind die $ε_r$ für handelsübliches Material nicht bekannt. Eine grobe Messung ist möglich, indem ein Testblock des Materials in den Strahl einer Distanzmessung eingefügt wird. Dadurch misst der Sensor eine etwas größere Distanz. Diese, auf die Dicke des Testblocks bezogen, ergibt die relative Lichtgeschwindigkeit $c_r$ im Material und damit $ε_r = (c_r / c_0)^2$.
 Für ein getestetes PLA-Material wurde so experimentell ein $ε_r$ von ca. 2.5 bestimmt.
 
-> [!Important] Achtung
+> [!Important]
 > "Echtes" 100%-Infill lässt sich nie erreichen. In kleinen Hohlräumen kann sich immer noch Wasser sammeln. Gedruckte Linsen sind i.d.R. nicht wirklich für den Außeneinsatz geeignet.
 
 Presets für Typen:
@@ -40,7 +40,7 @@ Presets für Typen:
 - '1': plankonvexe, (a-/)sphärische Linse mit planer Eintrittsfläche
 - '2': plane, kohärente Fresnel-Linse 
 
-> [!Tip] Tipps zu den Presets
+> [!Tip]
 > - Der **Typ '0'** (mit planer Austrittsfläche) erreicht ideale aspärische Korrektur mit den Parametern (nach nach DIN ISO 10110-12):  
 > $f_{sag}( y ) = \frac{ y^2 }{ focusRadius + \sqrt{focusRadius^2 - (1 + k) C^2 y^2}}$
 > für (wie im Beispiel):
