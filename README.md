@@ -24,7 +24,7 @@ Für mm-Wellen gelten dabei die grundlegenden Prinzipien der Wellenoptik:
 
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschließlich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Für den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis häufig aus.
 
-> [!Note]
+> [!Note] Anmerkung
 > Die Simulation zeigt nur Vektoren. Dadurch, dass die Radar-Wellenlänge im Verhältnis zu den geometrischen Dimensionen recht hoch ist, führt das in der Realität zu einer Unschärfe. Realistische Öffnungswinkel einfacher, "kleiner" Radar-Optiken von z.B. 30 mm liegen im Bereich von minimal ca. 10 - 15 °. 
 
 In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, PLA, PETG und für 100%-Infill (für 3D-FDM-Druck) Dielektrizitätskonstanten $ε_r$ zwischen etwa 2.5 und 3.0 ([siehe './Docus/...'](./Docus/ChatGPT_DielektrischeEigenschaftenABS_PLA_PETG_60GHz.md)). Da die Brechnung zu Luft die Wurzel $\sqrt{ε_r}$ ist, sind die Designs alle ähnlich und über leichte Variationen Distanz/Radius kann man leicht das Optimum finden. Sphärische Linsen (ohne asphärische Korrekturen) lassen sich am einfachsten drucken, sind daher immer ein guter Ausgangspunkt. "Unebenheiten" der Linse, die deutlich unter der Wellenlänge liegen, sind kein Problem.
@@ -32,7 +32,7 @@ In der Praxis findet man für die üblicherweise eingesetzten Materialien ABS, P
 Normalerweise sind die $ε_r$ für handelsübliches Material nicht bekannt. Eine grobe Messung ist möglich, indem ein Testblock des Materials in den Strahl einer Distanzmessung eingefügt wird. Dadurch misst der Sensor eine etwas größere Distanz. Diese, auf die Dicke des Testblocks bezogen, ergibt die relative Lichtgeschwindigkeit $c_r$ im Material und damit $ε_r = (c_r / c_0)^2$.
 Für ein getestetes PLA-Material wurde so experimentell ein $ε_r$ von ca. 2.5 bestimmt.
 
-> [!Tip] 
+> [!Important] Achtung
 > "Echtes" 100%-Infill lässt sich nie erreichen. In kleinen Hohlräumen kann sich immer noch Wasser sammeln. Gedruckte Linsen sind i.d.R. nicht wirklich für den Außeneinsatz geeignet.
 
 Presets für Typen:
@@ -40,21 +40,16 @@ Presets für Typen:
 - '1': plankonvexe, (a-/)sphärische Linse mit planer Eintrittsfläche
 - '2': plane, kohärente Fresnel-Linse 
 
-> [!Tip] 
+> [!Tip] Tipps zu den Presets
 > - Der **Typ '0'** (mit planer Austrittsfläche) erreicht ideale aspärische Korrektur mit den Parametern (nach nach DIN ISO 10110-12):  
 > $f_{sag}( y ) = \frac{ y^2 }{ focusRadius + \sqrt{focusRadius^2 - (1 + k) C^2 y^2}}$
 > für (wie im Beispiel):
-> $focusRadius = X_{fixed} * (\sqrt{ε_r} - 1)$  nd  $hyperK = -ε_r$
+> $focusRadius = X_{fixed} * (\sqrt{ε_r} - 1)$ und  $hyperK = -ε_r$
 >
 > - **Typ '1'** (mit planaer Eintrittsfläche) ist bereits als rein sphärische Linse leicht druckbar mit ausreichend guten Ergebnissen für erste Tests. In der Praxis liefert die asphärische Korrektur dann aber doch für Linsen kleineren Durchmessers nochmal deutliche Verbesserungen.
 >
 > - **Typ '2'** (kohärente Fresnel-Linse) ist zwar schön flach, aber Achtung: hier werden 2 oder mehr Wellenzüge überlagert, evtl. also etwas weniger exakt.
 > 
-
-
-
-
-
 
 ## Schnellstart/Modellauswahl
 1. Repository klonen oder herunterladen.
@@ -86,7 +81,7 @@ Presets für Typen:
 | `startAngleDeg`, `endAngleDeg`, `angleStep` | `drawRays()` | Öffnungswinkel und Auflösung der Abstrahlkeule. |
 | `focusRadius` | `opticalSurfaces` | Krümmungsradius der Fläche; Vorzeichen bestimmt die Orientierung. |
 | `relPermittivity` | `opticalSurfaces` | Relative Permittivität des Mediums hinter der Fläche. |
-| `hyperK` | `opticalSurfaces` | Formfaktor für sphärische (= 0), paraboloide (< 0) oder hyperbolische Flächen (i.d.R. negativer als -1) |
+| `hyperK` | `opticalSurfaces` | Die 'konische Konstante' für sphärische (= 0), paraboloide (< 0) oder hyperbolische Flächen (i.d.R. negativer als -1) |
 
 ## 'Radarli'-Sensor
 Die Vorlage entstand für den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470" (aka 'Radarli'). Weitere Dokumentation und PDFs stehen unter folgendem Link bereit:
