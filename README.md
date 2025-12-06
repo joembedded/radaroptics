@@ -52,18 +52,15 @@ Presets für Typen:
 > 
 
 ## Schnellstart/Modellauswahl
-1. Repository klonen oder herunterladen.
-2. `index.html` in einem aktuellen Browser öffnen (lokal, kein Build-Schritt nötig).
-3. In `src/main.js` die gewünschten Parameter (primär `useModel`, `waveLengthMm`) anpassen.
-4. Seite im Browser neu laden, um Änderungen zu sehen.
-5. Zum Exportieren der Sagitta-Werte auf das Element klicken (🔗).
-6. Für FreeCAD reicht eine Seite für einen Rotationskörper, daher wird nur die positive y-Seite exportiert.
-7. Datei lokal speichern (Vorschlag: 'c:/temp/stuetz.dat').
-8. FreeCAD starten und Macro `radarli_freecad_import` anlegen.
-9. Neues Projekt öffnen und einen Körper darin anlegen, aber noch keinen Sketch.
-10. Den Macro `radarli_freecad_import` ausführen und gegebenenfalls Konturen ergänzen.
-11. Sketch zum 360° Drehkörper machen.
-12. Und zack: *HAPPY PRINTING* (100% Infill nicht vergessen)
+1. Entweder online oder Repo klonen oder herunterladen (für eigene Linsen in `src/main.js` die gewünschten Parameter (primär `useModel`, `waveLengthMm`) anpassen)
+2. Zum Exportieren der Sagitta-Werte auf das Element klicken (🔗).
+3. Für FreeCAD reicht eine Seite für einen Rotationskörper, daher wird nur die positive y-Seite exportiert.
+4. Datei lokal speichern (Vorschlag: 'c:/temp/stuetz.dat').
+5. FreeCAD starten und Macro `radarli_freecad_import` anlegen.
+6. Neues Projekt öffnen und einen Körper darin anlegen, aber noch keinen Sketch.
+7. Den Macro `radarli_freecad_import` ausführen und gegebenenfalls Konturen ergänzen.
+8. Sketch zum 360° Drehkörper machen.
+9. Und zack: *HAPPY PRINTING* (100% Infill nicht vergessen)
 
 ## Aufbau der Simulation
 - **Emitter (rot):** Punktquelle am Ursprung, deren Abstrahlwinkel über `startAngleDeg`, `endAngleDeg` und `angleStep` gesteuert wird.
