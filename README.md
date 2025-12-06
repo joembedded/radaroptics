@@ -49,7 +49,6 @@ Presets für Typen:
 > - **Typ '1'** (mit planaer Eintrittsfläche) ist bereits als rein sphärische Linse leicht druckbar mit ausreichend guten Ergebnissen für erste Tests. In der Praxis liefert die asphärische Korrektur dann aber doch für Linsen kleineren Durchmessers nochmal deutliche Verbesserungen.
 >
 > - **Typ '2'** (kohärente Fresnel-Linse) ist zwar schön flach, aber Achtung: hier werden 2 oder mehr Wellenzüge überlagert, evtl. also etwas weniger exakt.
-> 
 
 ## Schnellstart/Modellauswahl
 1. Entweder online oder Repo klonen oder herunterladen (für eigene Linsen in `src/main.js` die gewünschten Parameter (primär `useModel`, `waveLengthMm`) anpassen)
@@ -64,10 +63,9 @@ Presets für Typen:
 
 ## Aufbau der Simulation
 - **Emitter (rot):** Punktquelle am Ursprung, deren Abstrahlwinkel über `startAngleDeg`, `endAngleDeg` und `angleStep` gesteuert wird.
-- **Optische Flächen:** In `opticalSurfaces` definierte Übergänge mit fixen X-Positionen (`xFixed`) und vertikalem Ausdehnungsbereich (`yMin`, `yMax`). Jede Fläche kann plan, konvex oder konkav sein.
+- **Optische Flächen:** In `opticalSurfaces` (in `src/main.js`) definierte Übergänge mit fixen X-Positionen (`xFixed`) und vertikalem Ausdehnungsbereich (`yMin`, `yMax`). Jede Fläche kann plan, konvex oder konkav sein.
 - **Brechung:** Die relative Dielektrizitätskonstante (`relPermittivity`) wird für den Snellius-Effekt genutzt. `focusRadius` beschreibt die Krümmung (negativ = konvex, positiv = konkav, 0 = plan).
-- **Asphärizität:** Über `hyperK` kann die Fläche von sphärisch (0) hin zu paraboloid oder hyperbolisch (kleiner -1) verzerrt werden.
-- **Detektorfläche:** Eine entfernte Fläche am Ende des Arrays dient als "Leinwand" für austretende Strahlen.
+- **Asphärizität:** Über `hyperK` ('konische Konstante') kann die Fläche von sphärisch (0) hin zu paraboloid oder hyperbolisch (kleiner -1) verzerrt werden.
 
 ## Wichtige Parameter (Auszug)
 | Parameter | Datei / Abschnitt | Bedeutung |
