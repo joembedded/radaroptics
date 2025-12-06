@@ -18,9 +18,9 @@
 Moderne mm-Wellen-Radarchips (z. B. ACCONEER A121) besitzen häufig eine relativ breite Abstrahlkeule von 60 bis 90 Grad. Für Punkt- oder Distanzmessungen ist jedoch eine stärker fokussierte Keule viel besser geeignet. Bei Frequenzen um 60 GHz beträgt die Wellenlänge nur etwa 5 mm – groß genug, um dielektrische Linsen ähnlich wie in der optischen Abbildung zu verwenden, und gleichzeitig wesentlich einfacher herstellbar, zum Beispiel mittels 3D-Druck.
 
 Für mm-Wellen gelten dabei die grundlegenden Prinzipien der Wellenoptik:
-• **Huygenssches Prinzip** – beschreibt die Ausbreitung von Wellenfronten
-• **Fermatsches Prinzip** – beschreibt den Strahlverlauf als Weg minimaler optischer Länge
-• **Snelliussches Brechungsgesetz** – beschreibt die Brechung und Reflexion an Grenzflächen unterschiedlicher dielektrischer bzw. optischer Materialien
+- **Huygenssches Prinzip** – beschreibt die Ausbreitung von Wellenfronten
+- **Fermatsches Prinzip** – beschreibt den Strahlverlauf als Weg minimaler optischer Länge
+- **Snelliussches Brechungsgesetz** – beschreibt die Brechung und Reflexion an Grenzflächen unterschiedlicher dielektrischer bzw. optischer Materialien
 
 Die Simulation zeigt, wie sich Radarstrahlen durch verschiedene Medien bewegen. Sie betrachtet ausschließlich die Hauptstrahlablenkung und bildet keine Nebenkeulen oder Mehrwegeeffekte ab. Für den Entwurf von Linsengeometrien reicht dieser vereinfachte Ansatz in der Praxis häufig aus.
 
