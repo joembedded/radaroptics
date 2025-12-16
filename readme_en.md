@@ -56,6 +56,12 @@ Presets for types:
 >
 > - **Type '2'** (coherent Fresnel lens) is indeed nice and flat, but beware: two or more wave trains are superimposed here, which may make it slightly less accurate.
 
+## Real world result
+A real world Type '0', with excellent performance. Made of IP68 ABS:
+
+![A Real World Type '0'](img/HyperplanarABS_F10.jpg)
+
+
 ## Quick start / model selection
 1. Either run online or clone/download the repo (to design your own lenses adjust the desired parameters in `src/main.js`, primarily `useModel`, `waveLengthMm`).
 2. To export the sagitta values, click on the element (🔗).

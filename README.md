@@ -57,6 +57,12 @@ Presets für Typen:
 >
 > - **Typ '2'** (kohärente Fresnel-Linse) ist zwar schön flach, aber Achtung: hier werden 2 oder mehr Wellenzüge überlagert, evtl. also etwas weniger exakt.
 
+## Reale Ergebnisse
+Eine reale Linse vom Typ '0' mit exzellenter Performance. Hergestellt aus IP68 ABS:
+
+![Eine reale Linse vom Typ '0'](img/HyperplanarABS_F10.jpg)
+
+
 ## Schnellstart/Modellauswahl
 1. Entweder online oder Repo klonen bzw. herunterladen (für eigene Linsen in `src/main.js` die gewünschten Parameter (primär `useModel`, `waveLengthMm`) anpassen)
 2. Zum Exportieren der Sagitta-Werte auf das Element klicken (🔗).
