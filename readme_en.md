@@ -64,6 +64,8 @@ A real Type '0' lens with excellent performance:
     - Focus is shifted by +1 mm for adjustment
     - Transition at the inner corner was rounded with a 2 mm radius for easier manufacturing
 
+> [!IMPORTANT]
+> 📧⚙️🛠️ Inquiries for technical collaborations are always welcome!
 
 ![A real-world Type '0'](img/HyperplanarABS_F10.jpg)
 

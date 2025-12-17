@@ -58,13 +58,18 @@ Presets für Typen:
 > - **Typ '2'** (kohärente Fresnel-Linse) ist zwar schön flach, aber Achtung: hier werden 2 oder mehr Wellenzüge überlagert, evtl. also etwas weniger exakt.
 
 ## Reale Ergebnisse
+
 Eine reale Linse vom Typ '0' mit exzellenter Performance:
 - hergestellt per CNC aus ABS Vollmaterial, damit voll Outdoor-tauglich
 - Leichte Modifikationen gegenüber 3D-Druck: 
-  - Focus wird zur Anpassung um +1 mm verschoben
-  - Übergang an der inneren Ecke wurde mit Radius 2mm verrundet, damit einfacher zu fertigen.
+  - Focus wird zur Anpassung um +1mm verschoben.
+  - Übergang an der inneren Ecke wurde mit Radius 1mm verrundet, damit einfacher zu fertigen.
+  
+> [!IMPORTANT]
+> 📧⚙️🛠️ Anfragen für technische Kooperationen sind jederzeit gerne  willkommen!
 
 ![Eine reale Linse vom Typ '0'](img/HyperplanarABS_F10.jpg)
+
 
 
 ## Schnellstart/Modellauswahl
