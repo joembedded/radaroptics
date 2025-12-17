@@ -105,7 +105,7 @@ The template was created for the low-cost sensor "OSX Radar Distance 60 GHz Type
 
 ## Notes about the Simulation
 
-Only the refracted wave train in the main direction is considered, not backscatter or intensity distribution. However, the calculation exactly follows the physical laws. The first results from the 3D printer ('Radarli') are promising and agree very well with the expected values.
+Only the refracted wave train in the main direction is considered, not backscatter or intensity distribution. However, the calculation exactly follows the physical laws. The first results ('Radarli') are promising and agree very well with the expected values.
 
 *Good luck designing your own radar optics!* 😊🎯✨
 <br>*And, as already mentioned:* 📧⚙️🛠️ *Inquiries for technical collaborations are always welcome!*
