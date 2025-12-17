@@ -58,7 +58,11 @@ Presets für Typen:
 > - **Typ '2'** (kohärente Fresnel-Linse) ist zwar schön flach, aber Achtung: hier werden 2 oder mehr Wellenzüge überlagert, evtl. also etwas weniger exakt.
 
 ## Reale Ergebnisse
-Eine reale Linse vom Typ '0' mit exzellenter Performance. Hergestellt aus IP68 ABS:
+Eine reale Linse vom Typ '0' mit exzellenter Performance:
+- hergestellt per CNC aus ABS Vollmaterial, damit voll Outdoor-tauglich
+- Leichte Modifikationen gegenüber 3D-Druck: 
+  - Focus wird zur Anpassung um +1 mm verschoben
+  - Übergang an der inneren Ecke wurde mit Radius 2mm verrundet, damit einfacher zu fertigen.
 
 ![Eine reale Linse vom Typ '0'](img/HyperplanarABS_F10.jpg)
 
@@ -96,7 +100,7 @@ Die Vorlage entstand für den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470
 
 <https://joembedded.de/x3/ltx_firmware/index.php?dir=./Open-SDI12-Blue-Sensors/0470_RadarDistA>
 
-## Anmerkungen
+## Anmerkungen zur Berechnung
 
 Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die Berechnung entspricht aber exakt den physikalischen Gesetzen.Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend und stimmen sehr gut mit den erwarteten Werten überein.
 

@@ -56,10 +56,16 @@ Presets for types:
 >
 > - **Type '2'** (coherent Fresnel lens) is indeed nice and flat, but beware: two or more wave trains are superimposed here, which may make it slightly less accurate.
 
-## Real world result
-A real world Type '0', with excellent performance. Made of IP68 ABS:
+## A real-world result
 
-![A Real World Type '0'](img/HyperplanarABS_F10.jpg)
+A real Type '0' lens with excellent performance:
+- Manufactured by CNC from solid ABS material, making it fully outdoor-suitable
+- Slight modifications compared to 3D printing:
+    - Focus is shifted by +1 mm for adjustment
+    - Transition at the inner corner was rounded with a 2 mm radius for easier manufacturing
+
+
+![A real-world Type '0'](img/HyperplanarABS_F10.jpg)
 
 
 ## Quick start / model selection
@@ -95,7 +101,7 @@ The template was created for the low-cost sensor "OSX Radar Distance 60 GHz Type
 
 <https://joembedded.de/x3/ltx_firmware/index.php?dir=./Open-SDI12-Blue-Sensors/0470_RadarDistA>
 
-## Notes
+## Notes about the Simulation
 
 Only the refracted wave train in the main direction is considered, not backscatter or intensity distribution. However, the calculation exactly follows the physical laws. The first results from the 3D printer ('Radarli') are promising and agree very well with the expected values.
 
