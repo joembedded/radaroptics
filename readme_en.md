@@ -61,8 +61,8 @@ Presets for types:
 A real Type '0' lens with excellent performance:
 - Manufactured by CNC from solid ABS material, making it fully outdoor-suitable
 - Slight modifications compared to 3D printing:
-    - Focus is shifted by +1 mm for adjustment
-    - Transition at the inner corner was rounded with a 2 mm radius for easier manufacturing
+    - Focus is shifted by +1 mm for adjustment.
+    - Transition at the inner corner was rounded with a 1 mm radius for easier manufacturing.
 
 > [!IMPORTANT]
 > 📧⚙️🛠️ Inquiries for technical collaborations are always welcome!
@@ -108,3 +108,4 @@ The template was created for the low-cost sensor "OSX Radar Distance 60 GHz Type
 Only the refracted wave train in the main direction is considered, not backscatter or intensity distribution. However, the calculation exactly follows the physical laws. The first results from the 3D printer ('Radarli') are promising and agree very well with the expected values.
 
 *Good luck designing your own radar optics!* 😊🎯✨
+<br>*And, as already mentioned:* 📧⚙️🛠️ *Inquiries for technical collaborations are always welcome!*

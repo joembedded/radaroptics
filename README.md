@@ -110,3 +110,4 @@ Die Vorlage entstand für den Low-Cost-Sensor "OSX Radar Distanz 60 GHz Type 470
 Es wird nur der gebeugte Wellenzug in Hauptrichtung betrachtet, keine Rückstreuung und keine Intensitätsverteilung. Die Berechnung entspricht aber exakt den physikalischen Gesetzen.Die ersten Ergebnisse aus dem 3D-Drucker ('Radarli') sind vielversprechend und stimmen sehr gut mit den erwarteten Werten überein.
 
 *Viel Erfolg beim Design eigener Radaroptiken!* 😊🎯✨
+<br>*Und, wie bereits erwähnt:* 📧⚙️🛠️ *Anfragen für technische Kooperationen sind jederzeit gerne  willkommen!*
