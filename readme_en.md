@@ -61,8 +61,8 @@ Presets for types:
 A real Type '0' lens with excellent performance:
 - Manufactured by CNC from solid ABS material, making it fully outdoor-suitable
 - Slight modifications compared to 3D printing:
-    - Focus is shifted by +1 mm for adjustment.
-    - Transition at the inner corner was rounded with a 1 mm radius for easier manufacturing.
+    - Focus is shifted by +1mm for adjustment.
+    - Transition at the inner corner was rounded with a 2mm radius for easier manufacturing.
 
 > [!IMPORTANT]
 > 📧⚙️🛠️ Inquiries for technical collaborations are always welcome!
